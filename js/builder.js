@@ -12,6 +12,8 @@ function DeckBuilder() {
 	this.lastSaved = null;
 	this.deckManager = new DeckManager();
 	this.deckManager.loadDeck(8);
+	this.searchManager = new SearchManager();
+
 
 	this.stage = new Kinetic.Stage({
 		container: 'container',
@@ -21,9 +23,11 @@ function DeckBuilder() {
 
 	this.mainBoard = new Kinetic.Layer();
 	this.sideBoard = new Kinetic.Layer();
+	this.searchLayer = new Kinetic.Layer();
 
 	this.stage.add(this.mainBoard);
 	this.stage.add(this.sideBoard);
+	this.stage.add(this.searchLayer);
 
 	this.mainBoard.on('mouseover', function(evt) {
 
@@ -31,6 +35,7 @@ function DeckBuilder() {
 }
 
 DeckBuilder.prototype.onLoad = function() {
+	this.searchManager.load();
 	Builder.mainBoard.getChildren().each(function(node, index) {
 		node.scale({
 			x: 0.3,
@@ -38,15 +43,17 @@ DeckBuilder.prototype.onLoad = function() {
 		});
 		node.position({
 			x: index * 20,
-			y: index * 1
+			y: index * 1 + 250
 		});
 		node.animateFadeIn.play();
 	});
+	Builder.mainBoard.draw();
 };
 
 function loop() {
 	requestAnimationFrame(loop);
-	Builder.mainBoard.draw();
-
-
 }
+
+window.oncontextmenu = function() {
+	return false; //Disable right click context menu
+};

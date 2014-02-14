@@ -12,6 +12,8 @@ function DeckBuilder() {
 	this.lastSaved = null;
 	this.deckManager = new DeckManager();
 	this.deckManager.loadDeck(8);
+	this.searchManager = new SearchManager();
+
 
 	this.stage = new Kinetic.Stage({
 		container: 'container',
@@ -21,9 +23,11 @@ function DeckBuilder() {
 
 	this.mainBoard = new Kinetic.Layer();
 	this.sideBoard = new Kinetic.Layer();
+	this.searchLayer = new Kinetic.Layer();
 
 	this.stage.add(this.mainBoard);
 	this.stage.add(this.sideBoard);
+	this.stage.add(this.searchLayer);
 
 	this.mainBoard.on('mouseover', function(evt) {
 
@@ -31,6 +35,7 @@ function DeckBuilder() {
 }
 
 DeckBuilder.prototype.onLoad = function() {
+	this.searchManager.load();
 	Builder.mainBoard.getChildren().each(function(node, index) {
 		node.scale({
 			x: 0.3,
@@ -38,18 +43,20 @@ DeckBuilder.prototype.onLoad = function() {
 		});
 		node.position({
 			x: index * 20,
-			y: index * 1
+			y: index * 1 + 250
 		});
 		node.animateFadeIn.play();
 	});
+	Builder.mainBoard.draw();
 };
 
 function loop() {
 	requestAnimationFrame(loop);
-	Builder.mainBoard.draw();
-
-
 }
+
+window.oncontextmenu = function() {
+	return false; //Disable right click context menu
+};
 function DeckManager() {
 	this.loadedCards = 0;
 	this.deckSize = null;
@@ -82,6 +89,7 @@ DeckManager.prototype.createCard = function(id) {
 				x: 100,
 				y: 100,
 				opacity: 0,
+				draggable: true,
 				image: img,
 			});
 			obj.cardData = cardData;
@@ -102,9 +110,23 @@ DeckManager.prototype.createCard = function(id) {
 			obj.animateTap = new Kinetic.Tween({
 				node: obj,
 				rotation: 90,
-				x: obj.getAttr('x') + obj.getAttr('width') / 2,
 				easing: Kinetic.Easings.Linear,
 				duration: 0.5
+			});
+
+			obj.on('dragstart', function(e) {
+				var isRightMB;
+				e = e || window.event;
+				if ("which" in e) // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+					isRightMB = e.which == 3;
+				else if ("button" in e) // IE, Opera 
+					isRightMB = e.button == 2;
+
+				if (isRightMB) obj.animateTap.play();
+			});
+
+			obj.on('dragstart', function() {
+				this.setZIndex(1000);
 			});
 
 			_this.loadedCards++;
@@ -114,4 +136,47 @@ DeckManager.prototype.createCard = function(id) {
 			}
 		};
 	});
+};
+$('#search input').keyup(function(e) {
+	var text = $('#search input').val();
+	if (text.length < 1 || e.keyCode < 48 || e.keyCode > 90) return; //Ignore non-character input
+
+	$.get("../MagicAnalysis-site/api/searchcards?name=" + text, function(data) {
+		Builder.searchManager.setResults($.parseJSON(data));
+	});
+});
+
+function SearchManager() {
+	this.searchResults = [];
+}
+
+SearchManager.prototype.load = function() {
+	var img = new Image();
+	var obj = new Kinetic.Image({
+		x: 0,
+		y: 0,
+		opacity: 1,
+		image: img,
+	});
+	obj.scale({
+		x: 0.5,
+		y: 0.5
+	});
+	Builder.searchLayer.add(obj);
+};
+
+SearchManager.prototype.setResults = function(data) {
+	this.searchResults = data;
+	this.updateDisplay();
+};
+
+SearchManager.prototype.updateDisplay = function() {
+	var img = new Image();
+	img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[0].set + "/" + this.searchResults[0].num + ".jpg";
+	img.onload = function() {
+		Builder.searchLayer.getChildren().each(function(node, index) {
+			node.setImage(img);
+		});
+	};
+	Builder.searchLayer.draw();
 };

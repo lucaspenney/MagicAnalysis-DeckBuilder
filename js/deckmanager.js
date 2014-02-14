@@ -30,6 +30,7 @@ DeckManager.prototype.createCard = function(id) {
 				x: 100,
 				y: 100,
 				opacity: 0,
+				draggable: true,
 				image: img,
 			});
 			obj.cardData = cardData;
@@ -50,9 +51,23 @@ DeckManager.prototype.createCard = function(id) {
 			obj.animateTap = new Kinetic.Tween({
 				node: obj,
 				rotation: 90,
-				x: obj.getAttr('x') + obj.getAttr('width') / 2,
 				easing: Kinetic.Easings.Linear,
 				duration: 0.5
+			});
+
+			obj.on('dragstart', function(e) {
+				var isRightMB;
+				e = e || window.event;
+				if ("which" in e) // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+					isRightMB = e.which == 3;
+				else if ("button" in e) // IE, Opera 
+					isRightMB = e.button == 2;
+
+				if (isRightMB) obj.animateTap.play();
+			});
+
+			obj.on('dragstart', function() {
+				this.setZIndex(1000);
 			});
 
 			_this.loadedCards++;
