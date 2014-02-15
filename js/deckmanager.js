@@ -34,26 +34,9 @@ DeckManager.prototype.createCard = function(id) {
 				image: img,
 			});
 			obj.cardData = cardData;
-			Builder.mainBoard.add(obj);
+			Builder.layers.mainBoard.add(obj);
 
-			obj.animateFadeOut = new Kinetic.Tween({
-				node: obj,
-				opacity: 0.0,
-				easing: Kinetic.Easings.Linear,
-				duration: 0.8
-			});
-			obj.animateFadeIn = new Kinetic.Tween({
-				node: obj,
-				opacity: 1,
-				easing: Kinetic.Easings.Linear,
-				duration: 0.8
-			});
-			obj.animateTap = new Kinetic.Tween({
-				node: obj,
-				rotation: 90,
-				easing: Kinetic.Easings.Linear,
-				duration: 0.5
-			});
+			obj.tweens = getTweens(obj);
 
 			obj.on('dragstart', function(e) {
 				var isRightMB;

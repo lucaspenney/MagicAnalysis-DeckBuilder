@@ -2,7 +2,7 @@ var Builder = null;
 
 $(document).ready(function() {
 	Builder = new DeckBuilder();
-	Builder.mainBoard.draw();
+	Builder.layers.mainBoard.draw();
 
 	loop();
 });
@@ -21,22 +21,25 @@ function DeckBuilder() {
 		height: 400 * 2
 	});
 
-	this.mainBoard = new Kinetic.Layer();
-	this.sideBoard = new Kinetic.Layer();
-	this.searchLayer = new Kinetic.Layer();
+	this.layers = {
+		background: new Kinetic.Layer(),
+		mainBoard: new Kinetic.Layer(),
+		sideBoard: new Kinetic.Layer(),
+		search: new Kinetic.Layer()
+	};
 
-	this.stage.add(this.mainBoard);
-	this.stage.add(this.sideBoard);
-	this.stage.add(this.searchLayer);
+	this.stage.add(this.layers.mainBoard);
+	this.stage.add(this.layers.sideBoard);
+	this.stage.add(this.layers.search);
 
-	this.mainBoard.on('mouseover', function(evt) {
+	this.layers.mainBoard.on('mouseover', function(evt) {
 
 	});
 }
 
 DeckBuilder.prototype.onLoad = function() {
 	this.searchManager.load();
-	Builder.mainBoard.getChildren().each(function(node, index) {
+	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.scale({
 			x: 0.3,
 			y: 0.3
@@ -45,9 +48,9 @@ DeckBuilder.prototype.onLoad = function() {
 			x: index * 20,
 			y: index * 1 + 250
 		});
-		node.animateFadeIn.play();
+		node.tweens.fadeIn.play();
 	});
-	Builder.mainBoard.draw();
+	Builder.layers.mainBoard.draw();
 };
 
 function loop() {

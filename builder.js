@@ -2,7 +2,7 @@ var Builder = null;
 
 $(document).ready(function() {
 	Builder = new DeckBuilder();
-	Builder.mainBoard.draw();
+	Builder.layers.mainBoard.draw();
 
 	loop();
 });
@@ -21,22 +21,25 @@ function DeckBuilder() {
 		height: 400 * 2
 	});
 
-	this.mainBoard = new Kinetic.Layer();
-	this.sideBoard = new Kinetic.Layer();
-	this.searchLayer = new Kinetic.Layer();
+	this.layers = {
+		background: new Kinetic.Layer(),
+		mainBoard: new Kinetic.Layer(),
+		sideBoard: new Kinetic.Layer(),
+		search: new Kinetic.Layer()
+	};
 
-	this.stage.add(this.mainBoard);
-	this.stage.add(this.sideBoard);
-	this.stage.add(this.searchLayer);
+	this.stage.add(this.layers.mainBoard);
+	this.stage.add(this.layers.sideBoard);
+	this.stage.add(this.layers.search);
 
-	this.mainBoard.on('mouseover', function(evt) {
+	this.layers.mainBoard.on('mouseover', function(evt) {
 
 	});
 }
 
 DeckBuilder.prototype.onLoad = function() {
 	this.searchManager.load();
-	Builder.mainBoard.getChildren().each(function(node, index) {
+	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.scale({
 			x: 0.3,
 			y: 0.3
@@ -45,9 +48,9 @@ DeckBuilder.prototype.onLoad = function() {
 			x: index * 20,
 			y: index * 1 + 250
 		});
-		node.animateFadeIn.play();
+		node.tweens.fadeIn.play();
 	});
-	Builder.mainBoard.draw();
+	Builder.layers.mainBoard.draw();
 };
 
 function loop() {
@@ -93,26 +96,9 @@ DeckManager.prototype.createCard = function(id) {
 				image: img,
 			});
 			obj.cardData = cardData;
-			Builder.mainBoard.add(obj);
+			Builder.layers.mainBoard.add(obj);
 
-			obj.animateFadeOut = new Kinetic.Tween({
-				node: obj,
-				opacity: 0.0,
-				easing: Kinetic.Easings.Linear,
-				duration: 0.8
-			});
-			obj.animateFadeIn = new Kinetic.Tween({
-				node: obj,
-				opacity: 1,
-				easing: Kinetic.Easings.Linear,
-				duration: 0.8
-			});
-			obj.animateTap = new Kinetic.Tween({
-				node: obj,
-				rotation: 90,
-				easing: Kinetic.Easings.Linear,
-				duration: 0.5
-			});
+			obj.tweens = getTweens(obj);
 
 			obj.on('dragstart', function(e) {
 				var isRightMB;
@@ -162,7 +148,7 @@ SearchManager.prototype.load = function() {
 		x: 0.5,
 		y: 0.5
 	});
-	Builder.searchLayer.add(obj);
+	Builder.layers.search.add(obj);
 };
 
 SearchManager.prototype.setResults = function(data) {
@@ -174,9 +160,31 @@ SearchManager.prototype.updateDisplay = function() {
 	var img = new Image();
 	img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[0].set + "/" + this.searchResults[0].num + ".jpg";
 	img.onload = function() {
-		Builder.searchLayer.getChildren().each(function(node, index) {
+		Builder.layers.search.getChildren().each(function(node, index) {
 			node.setImage(img);
 		});
 	};
-	Builder.searchLayer.draw();
+	Builder.layers.search.draw();
 };
+function getTweens(obj) {
+	return {
+		fadeOut: new Kinetic.Tween({
+			node: obj,
+			opacity: 0.0,
+			easing: Kinetic.Easings.Linear,
+			duration: 0.8
+		}),
+		fadeIn: new Kinetic.Tween({
+			node: obj,
+			opacity: 1,
+			easing: Kinetic.Easings.Linear,
+			duration: 0.8
+		}),
+		tapRotate: new Kinetic.Tween({
+			node: obj,
+			rotation: 90,
+			easing: Kinetic.Easings.Linear,
+			duration: 0.5
+		})
+	};
+}
