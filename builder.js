@@ -2,6 +2,7 @@ var Builder = null;
 
 $(document).ready(function() {
 	Builder = new DeckBuilder();
+	Builder.load();
 	Builder.layers.mainBoard.draw();
 
 	loop();
@@ -11,8 +12,8 @@ $(document).ready(function() {
 function DeckBuilder() {
 	this.lastSaved = null;
 	this.deckManager = new DeckManager();
-	this.deckManager.loadDeck(8);
 	this.searchManager = new SearchManager();
+	this.sorter = new Sorter();
 
 
 	this.stage = new Kinetic.Stage({
@@ -22,7 +23,7 @@ function DeckBuilder() {
 	});
 
 	this.layers = {
-		background: new Kinetic.Layer(),
+		//background: new Kinetic.Layer(),
 		mainBoard: new Kinetic.Layer(),
 		sideBoard: new Kinetic.Layer(),
 		search: new Kinetic.Layer()
@@ -31,26 +32,29 @@ function DeckBuilder() {
 	this.stage.add(this.layers.mainBoard);
 	this.stage.add(this.layers.sideBoard);
 	this.stage.add(this.layers.search);
-
 	this.layers.mainBoard.on('mouseover', function(evt) {
 
 	});
 }
 
-DeckBuilder.prototype.onLoad = function() {
+DeckBuilder.prototype.load = function() {
+	this.deckManager.loadDeck(8);
 	this.searchManager.load();
+};
+
+DeckBuilder.prototype.onDeckLoad = function() {
+	this.sorter.boardSort();
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
-		node.scale({
-			x: 0.3,
-			y: 0.3
-		});
-		node.position({
-			x: index * 20,
-			y: index * 1 + 250
-		});
+
 		node.tweens.fadeIn.play();
 	});
 	Builder.layers.mainBoard.draw();
+};
+
+DeckBuilder.prototype.draw = function() {
+	Builder.layers.mainBoard.draw();
+	Builder.layers.sideBoard.draw();
+	Builder.layers.search.draw();
 };
 
 function loop() {
@@ -89,7 +93,7 @@ DeckManager.prototype.createCard = function(id) {
 		img.src = "http://magicanalysis.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
 		img.onload = function() {
 			var obj = new Kinetic.Image({
-				x: 100,
+				x: 200,
 				y: 100,
 				opacity: 0,
 				draggable: true,
@@ -98,31 +102,49 @@ DeckManager.prototype.createCard = function(id) {
 			obj.cardData = cardData;
 			Builder.layers.mainBoard.add(obj);
 
-			obj.tweens = getTweens(obj);
-
-			obj.on('dragstart', function(e) {
-				var isRightMB;
-				e = e || window.event;
-				if ("which" in e) // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
-					isRightMB = e.which == 3;
-				else if ("button" in e) // IE, Opera 
-					isRightMB = e.button == 2;
-
-				if (isRightMB) obj.animateTap.play();
-			});
-
-			obj.on('dragstart', function() {
-				this.setZIndex(1000);
-			});
+			obj.tweens = cardTweens(obj);
+			obj.hooks = cardHooks(obj);
 
 			_this.loadedCards++;
 			if (_this.loadedCards >= _this.deckSize) {
 				_this.loading = false;
-				Builder.onLoad();
+				Builder.onDeckLoad();
 			}
 		};
 	});
 };
+function cardHooks(obj) {
+	obj.on('click', function() {
+
+	});
+
+	obj.on('dragstart', function(e) {
+		var isRightMB;
+		e = e || window.event;
+		if ("which" in e) // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
+			isRightMB = e.which == 3;
+		else if ("button" in e) // IE, Opera 
+			isRightMB = e.button == 2;
+
+		if (isRightMB) obj.animateTap.play();
+	});
+
+	obj.on('dragend', function(e) {
+		if (obj.x() < 600) {
+			obj.moveTo(Builder.layers.mainBoard);
+		} else if (obj.x() >= 600) {
+			obj.moveTo(Builder.layers.sideBoard);
+		}
+		Builder.draw();
+	});
+
+
+	obj.on('dragstart', function() {
+		this.setZIndex(1000);
+	});
+
+	return true;
+}
 $('#search input').keyup(function(e) {
 	var text = $('#search input').val();
 	if (text.length < 1 || e.keyCode < 48 || e.keyCode > 90) return; //Ignore non-character input
@@ -138,17 +160,24 @@ function SearchManager() {
 
 SearchManager.prototype.load = function() {
 	var img = new Image();
-	var obj = new Kinetic.Image({
-		x: 0,
-		y: 0,
-		opacity: 1,
-		image: img,
-	});
-	obj.scale({
-		x: 0.5,
-		y: 0.5
-	});
-	Builder.layers.search.add(obj);
+	img.src = "http://magicanalysis.com/cards/images/back.jpg";
+	img.onload = function() {
+		var obj = new Kinetic.Image({
+			x: 0,
+			y: 0,
+			opacity: 1,
+			image: img,
+		});
+		obj.scale({
+			x: 0.5,
+			y: 0.5
+		});
+		Builder.layers.search.add(obj);
+		obj.tweens = cardTweens(obj);
+		obj.hooks = cardHooks(obj);
+
+		obj.timeCreated = new Date().getTime();
+	};
 };
 
 SearchManager.prototype.setResults = function(data) {
@@ -157,6 +186,7 @@ SearchManager.prototype.setResults = function(data) {
 };
 
 SearchManager.prototype.updateDisplay = function() {
+	if (this.searchResults[0] === null) return;
 	var img = new Image();
 	img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[0].set + "/" + this.searchResults[0].num + ".jpg";
 	img.onload = function() {
@@ -166,7 +196,29 @@ SearchManager.prototype.updateDisplay = function() {
 	};
 	Builder.layers.search.draw();
 };
-function getTweens(obj) {
+function Sorter() {
+
+}
+
+Sorter.prototype.boardSort = function() {
+	Builder.layers.mainBoard.getChildren().each(function(node, index) {
+		node.scale({
+			x: 0.3,
+			y: 0.3
+		});
+		var x = 200 + ((index % 7) * 70);
+		var y = Math.floor(index / 7) * 100;
+		node.moveTween = new Kinetic.Tween({
+			node: node,
+			x: x,
+			y: y,
+			easing: Kinetic.Easings.Linear,
+			duration: 0.5
+		});
+		node.moveTween.play();
+	});
+};
+function cardTweens(obj) {
 	return {
 		fadeOut: new Kinetic.Tween({
 			node: obj,

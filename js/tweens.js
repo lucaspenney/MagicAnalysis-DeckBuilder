@@ -1,4 +1,4 @@
-function getTweens(obj) {
+function cardTweens(obj) {
 	return {
 		fadeOut: new Kinetic.Tween({
 			node: obj,

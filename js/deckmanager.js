@@ -27,7 +27,7 @@ DeckManager.prototype.createCard = function(id) {
 		img.src = "http://magicanalysis.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
 		img.onload = function() {
 			var obj = new Kinetic.Image({
-				x: 100,
+				x: 200,
 				y: 100,
 				opacity: 0,
 				draggable: true,
@@ -36,27 +36,13 @@ DeckManager.prototype.createCard = function(id) {
 			obj.cardData = cardData;
 			Builder.layers.mainBoard.add(obj);
 
-			obj.tweens = getTweens(obj);
-
-			obj.on('dragstart', function(e) {
-				var isRightMB;
-				e = e || window.event;
-				if ("which" in e) // Gecko (Firefox), WebKit (Safari/Chrome) & Opera
-					isRightMB = e.which == 3;
-				else if ("button" in e) // IE, Opera 
-					isRightMB = e.button == 2;
-
-				if (isRightMB) obj.animateTap.play();
-			});
-
-			obj.on('dragstart', function() {
-				this.setZIndex(1000);
-			});
+			obj.tweens = cardTweens(obj);
+			obj.hooks = cardHooks(obj);
 
 			_this.loadedCards++;
 			if (_this.loadedCards >= _this.deckSize) {
 				_this.loading = false;
-				Builder.onLoad();
+				Builder.onDeckLoad();
 			}
 		};
 	});

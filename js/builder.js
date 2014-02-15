@@ -2,6 +2,7 @@ var Builder = null;
 
 $(document).ready(function() {
 	Builder = new DeckBuilder();
+	Builder.load();
 	Builder.layers.mainBoard.draw();
 
 	loop();
@@ -11,8 +12,8 @@ $(document).ready(function() {
 function DeckBuilder() {
 	this.lastSaved = null;
 	this.deckManager = new DeckManager();
-	this.deckManager.loadDeck(8);
 	this.searchManager = new SearchManager();
+	this.sorter = new Sorter();
 
 
 	this.stage = new Kinetic.Stage({
@@ -22,7 +23,7 @@ function DeckBuilder() {
 	});
 
 	this.layers = {
-		background: new Kinetic.Layer(),
+		//background: new Kinetic.Layer(),
 		mainBoard: new Kinetic.Layer(),
 		sideBoard: new Kinetic.Layer(),
 		search: new Kinetic.Layer()
@@ -31,26 +32,29 @@ function DeckBuilder() {
 	this.stage.add(this.layers.mainBoard);
 	this.stage.add(this.layers.sideBoard);
 	this.stage.add(this.layers.search);
-
 	this.layers.mainBoard.on('mouseover', function(evt) {
 
 	});
 }
 
-DeckBuilder.prototype.onLoad = function() {
+DeckBuilder.prototype.load = function() {
+	this.deckManager.loadDeck(8);
 	this.searchManager.load();
+};
+
+DeckBuilder.prototype.onDeckLoad = function() {
+	this.sorter.boardSort();
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
-		node.scale({
-			x: 0.3,
-			y: 0.3
-		});
-		node.position({
-			x: index * 20,
-			y: index * 1 + 250
-		});
+
 		node.tweens.fadeIn.play();
 	});
 	Builder.layers.mainBoard.draw();
+};
+
+DeckBuilder.prototype.draw = function() {
+	Builder.layers.mainBoard.draw();
+	Builder.layers.sideBoard.draw();
+	Builder.layers.search.draw();
 };
 
 function loop() {

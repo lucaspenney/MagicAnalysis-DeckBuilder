@@ -13,17 +13,24 @@ function SearchManager() {
 
 SearchManager.prototype.load = function() {
 	var img = new Image();
-	var obj = new Kinetic.Image({
-		x: 0,
-		y: 0,
-		opacity: 1,
-		image: img,
-	});
-	obj.scale({
-		x: 0.5,
-		y: 0.5
-	});
-	Builder.layers.search.add(obj);
+	img.src = "http://magicanalysis.com/cards/images/back.jpg";
+	img.onload = function() {
+		var obj = new Kinetic.Image({
+			x: 0,
+			y: 0,
+			opacity: 1,
+			image: img,
+		});
+		obj.scale({
+			x: 0.5,
+			y: 0.5
+		});
+		Builder.layers.search.add(obj);
+		obj.tweens = cardTweens(obj);
+		obj.hooks = cardHooks(obj);
+
+		obj.timeCreated = new Date().getTime();
+	};
 };
 
 SearchManager.prototype.setResults = function(data) {
@@ -32,6 +39,7 @@ SearchManager.prototype.setResults = function(data) {
 };
 
 SearchManager.prototype.updateDisplay = function() {
+	if (this.searchResults[0] === null) return;
 	var img = new Image();
 	img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[0].set + "/" + this.searchResults[0].num + ".jpg";
 	img.onload = function() {
