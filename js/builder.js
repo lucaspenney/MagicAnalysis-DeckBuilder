@@ -18,8 +18,8 @@ function DeckBuilder() {
 
 	this.stage = new Kinetic.Stage({
 		container: 'container',
-		width: 600 * 2,
-		height: 400 * 2
+		width: 1000,
+		height: 750
 	});
 
 	this.layers = {
@@ -43,7 +43,7 @@ DeckBuilder.prototype.load = function() {
 };
 
 DeckBuilder.prototype.onDeckLoad = function() {
-	this.sorter.boardSort();
+	this.sorter.applySort();
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 
 		node.tweens.fadeIn.play();

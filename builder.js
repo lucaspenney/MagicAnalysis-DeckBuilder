@@ -18,8 +18,8 @@ function DeckBuilder() {
 
 	this.stage = new Kinetic.Stage({
 		container: 'container',
-		width: 600 * 2,
-		height: 400 * 2
+		width: 1000,
+		height: 750
 	});
 
 	this.layers = {
@@ -43,7 +43,7 @@ DeckBuilder.prototype.load = function() {
 };
 
 DeckBuilder.prototype.onDeckLoad = function() {
-	this.sorter.boardSort();
+	this.sorter.applySort();
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 
 		node.tweens.fadeIn.play();
@@ -126,16 +126,19 @@ function cardHooks(obj) {
 		else if ("button" in e) // IE, Opera 
 			isRightMB = e.button == 2;
 
-		if (isRightMB) obj.animateTap.play();
+		if (isRightMB) { //Do something if right mouse click
+
+		}
 	});
 
 	obj.on('dragend', function(e) {
-		if (obj.x() < 600) {
+		if (obj.x() < 700) {
 			obj.moveTo(Builder.layers.mainBoard);
-		} else if (obj.x() >= 600) {
+		} else if (obj.x() >= 700) {
 			obj.moveTo(Builder.layers.sideBoard);
 		}
 		Builder.draw();
+		Builder.sorter.applySort();
 	});
 
 
@@ -200,7 +203,12 @@ function Sorter() {
 
 }
 
-Sorter.prototype.boardSort = function() {
+Sorter.prototype.applySort = function() {
+	this.sortMainBoard();
+	this.sortSideBoard();
+};
+
+Sorter.prototype.sortMainBoard = function() {
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.scale({
 			x: 0.3,
@@ -208,6 +216,25 @@ Sorter.prototype.boardSort = function() {
 		});
 		var x = 200 + ((index % 7) * 70);
 		var y = Math.floor(index / 7) * 100;
+		node.moveTween = new Kinetic.Tween({
+			node: node,
+			x: x,
+			y: y,
+			easing: Kinetic.Easings.Linear,
+			duration: 0.5
+		});
+		node.moveTween.play();
+	});
+};
+
+Sorter.prototype.sortSideBoard = function() {
+	Builder.layers.sideBoard.getChildren().each(function(node, index) {
+		node.scale({
+			x: 0.3,
+			y: 0.3
+		});
+		var x = 800;
+		var y = Math.floor(index) * 100;
 		node.moveTween = new Kinetic.Tween({
 			node: node,
 			x: x,
@@ -231,12 +258,6 @@ function cardTweens(obj) {
 			opacity: 1,
 			easing: Kinetic.Easings.Linear,
 			duration: 0.8
-		}),
-		tapRotate: new Kinetic.Tween({
-			node: obj,
-			rotation: 90,
-			easing: Kinetic.Easings.Linear,
-			duration: 0.5
 		})
 	};
 }

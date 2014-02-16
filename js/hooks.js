@@ -11,16 +11,19 @@ function cardHooks(obj) {
 		else if ("button" in e) // IE, Opera 
 			isRightMB = e.button == 2;
 
-		if (isRightMB) obj.animateTap.play();
+		if (isRightMB) { //Do something if right mouse click
+
+		}
 	});
 
 	obj.on('dragend', function(e) {
-		if (obj.x() < 600) {
+		if (obj.x() < 700) {
 			obj.moveTo(Builder.layers.mainBoard);
-		} else if (obj.x() >= 600) {
+		} else if (obj.x() >= 700) {
 			obj.moveTo(Builder.layers.sideBoard);
 		}
 		Builder.draw();
+		Builder.sorter.applySort();
 	});
 
 
