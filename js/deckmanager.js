@@ -27,7 +27,7 @@ DeckManager.prototype.createCard = function(id) {
 		img.src = "http://magicanalysis.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
 		img.onload = function() {
 			var obj = new Kinetic.Image({
-				x: 200,
+				x: 400,
 				y: 100,
 				opacity: 0,
 				draggable: true,

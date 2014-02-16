@@ -10,10 +10,10 @@ Sorter.prototype.applySort = function() {
 Sorter.prototype.sortMainBoard = function() {
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.scale({
-			x: 0.3,
-			y: 0.3
+			x: 0.75,
+			y: 0.75
 		});
-		var x = 200 + ((index % 7) * 70);
+		var x = 350 + ((index % 7) * 70);
 		var y = Math.floor(index / 7) * 100;
 		node.moveTween = new Kinetic.Tween({
 			node: node,
@@ -29,10 +29,10 @@ Sorter.prototype.sortMainBoard = function() {
 Sorter.prototype.sortSideBoard = function() {
 	Builder.layers.sideBoard.getChildren().each(function(node, index) {
 		node.scale({
-			x: 0.3,
-			y: 0.3
+			x: 0.75,
+			y: 0.75
 		});
-		var x = 800;
+		var x = 1200;
 		var y = Math.floor(index) * 100;
 		node.moveTween = new Kinetic.Tween({
 			node: node,

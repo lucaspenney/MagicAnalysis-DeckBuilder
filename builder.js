@@ -18,9 +18,11 @@ function DeckBuilder() {
 
 	this.stage = new Kinetic.Stage({
 		container: 'container',
-		width: 1000,
-		height: 750
+		width: 1000 * 1.5,
+		height: 750 * 1.5
 	});
+
+	console.log(this.stage.getWidth());
 
 	this.layers = {
 		//background: new Kinetic.Layer(),
@@ -93,7 +95,7 @@ DeckManager.prototype.createCard = function(id) {
 		img.src = "http://magicanalysis.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
 		img.onload = function() {
 			var obj = new Kinetic.Image({
-				x: 200,
+				x: 400,
 				y: 100,
 				opacity: 0,
 				draggable: true,
@@ -132,9 +134,9 @@ function cardHooks(obj) {
 	});
 
 	obj.on('dragend', function(e) {
-		if (obj.x() < 700) {
+		if (obj.x() < 950) {
 			obj.moveTo(Builder.layers.mainBoard);
-		} else if (obj.x() >= 700) {
+		} else if (obj.x() >= 950) {
 			obj.moveTo(Builder.layers.sideBoard);
 		}
 		Builder.draw();
@@ -150,7 +152,7 @@ function cardHooks(obj) {
 }
 $('#search input').keyup(function(e) {
 	var text = $('#search input').val();
-	if (text.length < 1 || e.keyCode < 48 || e.keyCode > 90) return; //Ignore non-character input
+	if (text.length < 1 || (e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
 
 	$.get("../MagicAnalysis-site/api/searchcards?name=" + text, function(data) {
 		Builder.searchManager.setResults($.parseJSON(data));
@@ -172,8 +174,8 @@ SearchManager.prototype.load = function() {
 			image: img,
 		});
 		obj.scale({
-			x: 0.5,
-			y: 0.5
+			x: 1.05,
+			y: 1.05
 		});
 		Builder.layers.search.add(obj);
 		obj.tweens = cardTweens(obj);
@@ -181,6 +183,11 @@ SearchManager.prototype.load = function() {
 
 		obj.timeCreated = new Date().getTime();
 	};
+
+	var _this = this;
+	setTimeout(function() {
+		_this.updateDisplay();
+	}, 500);
 };
 
 SearchManager.prototype.setResults = function(data) {
@@ -189,7 +196,7 @@ SearchManager.prototype.setResults = function(data) {
 };
 
 SearchManager.prototype.updateDisplay = function() {
-	if (this.searchResults[0] === null) return;
+	if (this.searchResults[0] === undefined) return;
 	var img = new Image();
 	img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[0].set + "/" + this.searchResults[0].num + ".jpg";
 	img.onload = function() {
@@ -198,6 +205,10 @@ SearchManager.prototype.updateDisplay = function() {
 		});
 	};
 	Builder.layers.search.draw();
+	var _this = this;
+	setTimeout(function() {
+		_this.updateDisplay();
+	}, 500);
 };
 function Sorter() {
 
@@ -211,10 +222,10 @@ Sorter.prototype.applySort = function() {
 Sorter.prototype.sortMainBoard = function() {
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.scale({
-			x: 0.3,
-			y: 0.3
+			x: 0.75,
+			y: 0.75
 		});
-		var x = 200 + ((index % 7) * 70);
+		var x = 350 + ((index % 7) * 70);
 		var y = Math.floor(index / 7) * 100;
 		node.moveTween = new Kinetic.Tween({
 			node: node,
@@ -230,10 +241,10 @@ Sorter.prototype.sortMainBoard = function() {
 Sorter.prototype.sortSideBoard = function() {
 	Builder.layers.sideBoard.getChildren().each(function(node, index) {
 		node.scale({
-			x: 0.3,
-			y: 0.3
+			x: 0.75,
+			y: 0.75
 		});
-		var x = 800;
+		var x = 1200;
 		var y = Math.floor(index) * 100;
 		node.moveTween = new Kinetic.Tween({
 			node: node,

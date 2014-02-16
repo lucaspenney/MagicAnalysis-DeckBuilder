@@ -17,9 +17,9 @@ function cardHooks(obj) {
 	});
 
 	obj.on('dragend', function(e) {
-		if (obj.x() < 700) {
+		if (obj.x() < 950) {
 			obj.moveTo(Builder.layers.mainBoard);
-		} else if (obj.x() >= 700) {
+		} else if (obj.x() >= 950) {
 			obj.moveTo(Builder.layers.sideBoard);
 		}
 		Builder.draw();

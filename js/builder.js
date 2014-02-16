@@ -18,9 +18,11 @@ function DeckBuilder() {
 
 	this.stage = new Kinetic.Stage({
 		container: 'container',
-		width: 1000,
-		height: 750
+		width: 1000 * 1.5,
+		height: 750 * 1.5
 	});
+
+	console.log(this.stage.getWidth());
 
 	this.layers = {
 		//background: new Kinetic.Layer(),

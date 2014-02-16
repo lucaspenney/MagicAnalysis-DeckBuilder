@@ -1,6 +1,6 @@
 $('#search input').keyup(function(e) {
 	var text = $('#search input').val();
-	if (text.length < 1 || e.keyCode < 48 || e.keyCode > 90) return; //Ignore non-character input
+	if (text.length < 1 || (e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
 
 	$.get("../MagicAnalysis-site/api/searchcards?name=" + text, function(data) {
 		Builder.searchManager.setResults($.parseJSON(data));
@@ -22,8 +22,8 @@ SearchManager.prototype.load = function() {
 			image: img,
 		});
 		obj.scale({
-			x: 0.5,
-			y: 0.5
+			x: 1.05,
+			y: 1.05
 		});
 		Builder.layers.search.add(obj);
 		obj.tweens = cardTweens(obj);
@@ -31,6 +31,11 @@ SearchManager.prototype.load = function() {
 
 		obj.timeCreated = new Date().getTime();
 	};
+
+	var _this = this;
+	setTimeout(function() {
+		_this.updateDisplay();
+	}, 500);
 };
 
 SearchManager.prototype.setResults = function(data) {
@@ -39,7 +44,7 @@ SearchManager.prototype.setResults = function(data) {
 };
 
 SearchManager.prototype.updateDisplay = function() {
-	if (this.searchResults[0] === null) return;
+	if (this.searchResults[0] === undefined) return;
 	var img = new Image();
 	img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[0].set + "/" + this.searchResults[0].num + ".jpg";
 	img.onload = function() {
@@ -48,4 +53,8 @@ SearchManager.prototype.updateDisplay = function() {
 		});
 	};
 	Builder.layers.search.draw();
+	var _this = this;
+	setTimeout(function() {
+		_this.updateDisplay();
+	}, 500);
 };
