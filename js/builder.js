@@ -47,7 +47,6 @@ DeckBuilder.prototype.load = function() {
 DeckBuilder.prototype.onDeckLoad = function() {
 	this.sorter.applySort();
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
-
 		node.tweens.fadeIn.play();
 	});
 	Builder.layers.mainBoard.draw();
