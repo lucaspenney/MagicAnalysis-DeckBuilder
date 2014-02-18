@@ -197,6 +197,15 @@ SearchManager.prototype.setResults = function(data) {
 
 SearchManager.prototype.updateDisplay = function() {
 	if (this.searchResults[0] === undefined) return;
+
+	var resultsSelection = '';
+	for (var i = 0; i < this.searchResults.length; i++) {
+		resultsSelection += "<option>" + this.searchResults[i].name + "</option>";
+	}
+	if ($('#search select').text() != $('<div/>').html(resultsSelection).text()) {
+		$('#search select').html(resultsSelection);
+	}
+
 	var img = new Image();
 	img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[0].set + "/" + this.searchResults[0].num + ".jpg";
 	img.onload = function() {
