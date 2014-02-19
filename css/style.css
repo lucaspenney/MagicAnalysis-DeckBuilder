@@ -1,0 +1,14 @@
+canvas {
+	image-rendering: auto;
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+
+	 
+	transform: scale(0.6667,0.6667) translate(-375px,-275px); 
+	-ms-transform: scale(0.6667,0.6667) translate(-375px,-275px);  
+	-webkit-transform: scale(0.6667,0.6667) translate(-375px,-275px); 
+
+}
+#search select {
+	width: 234px !important;
+}

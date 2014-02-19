@@ -3,26 +3,16 @@ module.exports = function(grunt) {
 	// Project configuration.
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
-		copy: {
-			php: {
-				src: '*.php',
-				dest: 'release/',
-			},
-			images: {
-				src: 'images/*',
-				dest: 'release/',
-			}
-		},
 		concat: {
-			compiled: {
-				src: 'js/*', // source files mask
+			build: {
+				src: 'js/*.js', // source files mask
 				dest: 'builder.js', // destination folder
 			}
 		},
 		uglify: {
 			files: {
 				src: 'js/*', // source files mask
-				dest: 'release/scripts/', // destination folder
+				dest: 'release/', // destination folder
 				expand: true, // allow dynamic building
 				flatten: true, // remove all unnecessary nesting
 				ext: '.min.js' // replace .js to .min.js
