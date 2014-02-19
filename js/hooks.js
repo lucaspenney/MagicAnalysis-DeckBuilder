@@ -18,9 +18,33 @@ function cardHooks(obj) {
 
 	obj.on('dragend', function(e) {
 		if (obj.x() < 1300) {
-			obj.moveTo(Builder.layers.mainBoard);
+			if (obj.x() > 200) {
+				obj.moveTo(Builder.layers.mainBoard);
+			} else {
+				obj.x(0);
+				obj.y(0);
+				return;
+			}
 		} else if (obj.x() >= 1300) {
 			obj.moveTo(Builder.layers.sideBoard);
+		}
+		//If this card was dragged from the search field, recreate the search preview card
+		if (obj.name() == 'previewMain') {
+			obj.name('');
+			var previewMain = new Kinetic.Image({
+				x: 0,
+				y: 0,
+				opacity: 1,
+				scale: 1.05,
+				draggable: true,
+				name: 'previewMain'
+			});
+
+			Builder.layers.search.add(previewMain);
+			previewMain.hooks = cardHooks(previewMain);
+			previewMain.tweens = cardTweens(previewMain);
+			previewMain.tweens.fadeIn.play();
+			Builder.searchManager.updateDisplay();
 		}
 		Builder.draw();
 		Builder.sorter.applySort();
