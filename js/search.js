@@ -7,15 +7,20 @@ $('#search input').keyup(function(e) {
 	});
 });
 
+$('#search select').change(function(e) {
+	Builder.searchManager.selectedResult = $(this).val();
+});
+
 function SearchManager() {
 	this.searchResults = [];
-	this.selectedResult = null;
+	this.selectedResult = 0;
 	this.cardBackImg = new Image();
 	this.cardBackImg.src = "http://magicanalysis.com/cards/images/back.jpg";
 }
 
 SearchManager.prototype.load = function() {
-	var cardBack = new Kinetic.Image({
+	//Create card backdrops
+	var cardBack0 = new Kinetic.Image({
 		x: 0,
 		y: 0,
 		opacity: 1,
@@ -23,6 +28,29 @@ SearchManager.prototype.load = function() {
 		image: this.cardBackImg,
 		name: 'cardBack'
 	});
+	var cardBack1 = new Kinetic.Image({
+		x: 0,
+		y: 450,
+		opacity: 1,
+		image: this.cardBackImg,
+		name: 'cardBack'
+	});
+	cardBack1.scale({
+		x: 0.5,
+		y: 0.5
+	});
+	var cardBack2 = new Kinetic.Image({
+		x: 156,
+		y: 450,
+		opacity: 1,
+		image: this.cardBackImg,
+		name: 'cardBack'
+	});
+	cardBack2.scale({
+		x: 0.5,
+		y: 0.5
+	});
+	//Card previews
 	var previewMain = new Kinetic.Image({
 		x: 0,
 		y: 0,
@@ -43,10 +71,23 @@ SearchManager.prototype.load = function() {
 		scale: 0.5,
 		name: 'previewSmall2'
 	});
-	previewSmall1.on('click', Builder.searchManager.onPreviewClick);
-	previewSmall2.on('click', Builder.searchManager.onPreviewClick);
 
-	Builder.layers.search.add(cardBack);
+	var _this = this;
+
+	function onPreviewClick() {
+		_this.selectedResult = this.cardData.id;
+		$('#search select option').each(function() {
+			if ($(this).val() === _this.selectedResult) {
+				$(this).prop('selected', true);
+			}
+		});
+	}
+	previewSmall1.on('click', onPreviewClick);
+	previewSmall2.on('click', onPreviewClick);
+
+	Builder.layers.search.add(cardBack0);
+	Builder.layers.search.add(cardBack1);
+	Builder.layers.search.add(cardBack2);
 	Builder.layers.search.add(previewMain);
 	Builder.layers.search.add(previewSmall1);
 	Builder.layers.search.add(previewSmall2);
@@ -63,37 +104,43 @@ SearchManager.prototype.load = function() {
 
 SearchManager.prototype.setResults = function(data) {
 	this.searchResults = data;
+	this.selectedResult = this.searchResults[0].id;
 	this.updateDisplay();
 };
 
 SearchManager.prototype.updateDisplay = function() {
 	if (this.searchResults[0] === undefined) {
-		Builder.layers.search.getChildren().each(function(node, index) {
-			if (node.name() == 'cardBack') {
-				node.setImage(this.cardBackImg);
-			}
-		});
 		return;
 	}
 
 	var resultsSelection = '';
 	for (var i = 0; i < this.searchResults.length; i++) {
-		if (i === 0) resultsSelection += "<option selected>" + this.searchResults[i].name + "</option>";
+		if (this.searchResults[i].id === this.selectedResult) resultsSelection += "<option selected value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + "</option>";
 		else resultsSelection += "<option value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + "</option>";
 	}
 	if ($('#search select').text() != $('<div/>').html(resultsSelection).text()) {
 		$('#search select').html(resultsSelection);
 	}
 
+	var selectedIndex = 0;
+	for (var i = 0; i < this.searchResults.length; i++) {
+		if (this.searchResults[i].id === this.selectedResult) {
+			selectedIndex = i;
+			break;
+		}
+	}
+
 	var previews = [];
-	for (var i = 0; i < 3; i++) {
-		if (this.searchResults.length < i) continue;
+	var k = 0;
+	for (var i = selectedIndex; k < 3; i++) {
+		if (i > this.searchResults.length - 1) i = 0;
 		var img = new Image();
 		img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[i].set + "/" + this.searchResults[i].num + ".jpg";
 		previews.push({
 			image: img,
 			data: this.searchResults[i]
 		});
+		k++;
 	}
 	Builder.layers.search.getChildren().each(function(node, index) {
 		var name = node.name();
@@ -122,9 +169,4 @@ SearchManager.prototype.updateDisplay = function() {
 	setTimeout(function() {
 		_this.updateDisplay();
 	}, 500);
-};
-
-SearchManager.prototype.onPreviewClick = function(e) {
-	this.selectedResult = this.cardData.id;
-	console.log(this.selectedResult);
 };
