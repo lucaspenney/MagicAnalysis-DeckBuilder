@@ -42,11 +42,21 @@ function cardTweens(obj) {
 			});
 			tween.play();
 		},
-		scaleSmall: function() {
+		scaleMedium: function() {
 			var tween = new Kinetic.Tween({
 				node: obj,
 				scaleX: 0.6,
 				scaleY: 0.6,
+				easing: Kinetic.Easings.Linear,
+				duration: 0.3,
+			});
+			tween.play();
+		},
+		scaleSmall: function() {
+			var tween = new Kinetic.Tween({
+				node: obj,
+				scaleX: 0.35,
+				scaleY: 0.35,
 				easing: Kinetic.Easings.Linear,
 				duration: 0.3,
 			});

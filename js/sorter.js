@@ -10,10 +10,6 @@ Sorter.prototype.applySort = function() {
 Sorter.prototype.sortMainBoard = function() {
 	var nodes = [];
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
-		node.scale({
-			x: 0.6,
-			y: 0.6
-		});
 		nodes.push(node);
 	});
 	this.sortByConvertedCost(nodes);
@@ -21,11 +17,6 @@ Sorter.prototype.sortMainBoard = function() {
 
 Sorter.prototype.sortSideBoard = function() {
 	Builder.layers.sideBoard.getChildren().each(function(node, index) {
-		//Todo: tween these scales
-		node.scale({
-			x: 0.4,
-			y: 0.4
-		});
 		var x = 1350;
 		var y = Math.floor(index) * 100;
 		node.moveTween = new Kinetic.Tween({

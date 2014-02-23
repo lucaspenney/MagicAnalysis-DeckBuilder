@@ -26,11 +26,14 @@ SearchManager.prototype.load = function() {
 			if (e.relatedTarget.id !== 'deckname') {
 				$(this).focus();
 			}
-		}
+		} else $(this).focus();
 	});
 	$('#deckname').on('blur', function(e) {
 		$('#search input').focus();
-	})
+	});
+	$('canvas').click(function(e) {
+		$('#search input').focus();
+	});
 	//Create card backdrops
 	var cardBack0 = new Kinetic.Image({
 		x: 0,

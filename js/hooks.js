@@ -26,8 +26,10 @@ function cardHooks(obj) {
 				obj.y(0);
 				return;
 			}
+			obj.tweens.scaleMedium();
 		} else if (obj.x() >= 1300) {
 			obj.moveTo(Builder.layers.sideBoard);
+			obj.tweens.scaleSmall();
 		}
 		//If this card was dragged from the search field, recreate the search preview card
 		if (obj.name() == 'previewMain') {
@@ -35,7 +37,7 @@ function cardHooks(obj) {
 			var previewMain = new Kinetic.Image({
 				x: 0,
 				y: 0,
-				opacity: 1,
+				opacity: 0.0,
 				scale: 1.05,
 				draggable: true,
 				name: 'previewMain'
@@ -47,7 +49,6 @@ function cardHooks(obj) {
 			previewMain.tweens.fadeIn();
 			Builder.searchManager.updateDisplay();
 		}
-		obj.tweens.scaleSmall();
 		Builder.draw();
 		Builder.sorter.applySort();
 		Builder.deckManager.saveDeck();

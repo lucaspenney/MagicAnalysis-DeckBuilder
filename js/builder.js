@@ -45,6 +45,9 @@ DeckBuilder.prototype.onDeckLoad = function() {
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.tweens.fadeIn();
 	});
+	Builder.layers.sideBoard.getChildren().each(function(node, index) {
+		node.tweens.fadeIn();
+	});
 	Builder.layers.mainBoard.draw();
 };
 
