@@ -48,6 +48,7 @@ function cardHooks(obj) {
 		}
 		Builder.draw();
 		Builder.sorter.applySort();
+		Builder.deckManager.saveDeck();
 	});
 
 

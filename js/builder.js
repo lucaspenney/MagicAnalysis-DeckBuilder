@@ -40,7 +40,7 @@ function DeckBuilder() {
 }
 
 DeckBuilder.prototype.load = function() {
-	this.deckManager.loadDeck(8);
+	this.deckManager.loadDeck(5);
 	this.searchManager.load();
 };
 

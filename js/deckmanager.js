@@ -3,6 +3,7 @@ function DeckManager() {
 	this.deckSize = null;
 	this.deckId = null;
 	this.loading = false;
+	this.deckName = 'Test deck';
 }
 
 DeckManager.prototype.loadDeck = function(id) {
@@ -15,6 +16,33 @@ DeckManager.prototype.loadDeck = function(id) {
 			_this.deckSize = data.length;
 			_this.createCard(data[i].cardid);
 		}
+	});
+};
+
+DeckManager.prototype.saveDeck = function() {
+	var cards = [];
+	Builder.layers.mainBoard.getChildren().each(function(node, index) {
+		cards.push({
+			id: node.cardData.id,
+			sideboard: 0
+		});
+	});
+	Builder.layers.sideBoard.getChildren().each(function(node, index) {
+		cards.push({
+			id: node.cardData.id,
+			sideboard: 1
+		});
+	});
+	var data = {
+		id: this.deckId,
+		name: this.deckName,
+		cards: cards
+	};
+
+	$.post("http://localhost/MagicAnalysis-site/api/savedeck", {
+		deck: data
+	}, function() {
+
 	});
 };
 
