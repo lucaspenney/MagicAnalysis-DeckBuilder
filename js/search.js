@@ -19,6 +19,7 @@ function SearchManager() {
 }
 
 SearchManager.prototype.load = function() {
+	console.log("loading search");
 	//Create card backdrops
 	var cardBack0 = new Kinetic.Image({
 		x: 0,
@@ -93,8 +94,9 @@ SearchManager.prototype.load = function() {
 	Builder.layers.search.add(previewSmall2);
 	previewMain.hooks = cardHooks(previewMain);
 	previewMain.tweens = cardTweens(previewMain);
+	Builder.draw();
+	Builder.sorter.applySort();
 
-	var _this = this;
 	setTimeout(function() {
 		_this.updateDisplay();
 	}, 500);

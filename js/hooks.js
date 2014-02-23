@@ -12,7 +12,7 @@ function cardHooks(obj) {
 			isRightMB = e.button == 2;
 
 		if (isRightMB) { //Do something if right mouse click
-
+			obj.tweens.fadeDelete();
 		}
 	});
 
@@ -43,7 +43,7 @@ function cardHooks(obj) {
 			Builder.layers.search.add(previewMain);
 			previewMain.hooks = cardHooks(previewMain);
 			previewMain.tweens = cardTweens(previewMain);
-			previewMain.tweens.fadeIn.play();
+			previewMain.tweens.fadeIn();
 			Builder.searchManager.updateDisplay();
 		}
 		Builder.draw();

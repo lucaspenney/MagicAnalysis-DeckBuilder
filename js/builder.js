@@ -22,8 +22,6 @@ function DeckBuilder() {
 		height: 750 * 1.5
 	});
 
-	console.log(this.stage.getWidth());
-
 	this.layers = {
 		//background: new Kinetic.Layer(),
 		mainBoard: new Kinetic.Layer(),
@@ -34,20 +32,18 @@ function DeckBuilder() {
 	this.stage.add(this.layers.mainBoard);
 	this.stage.add(this.layers.sideBoard);
 	this.stage.add(this.layers.search);
-	this.layers.mainBoard.on('mouseover', function(evt) {
-
-	});
 }
 
 DeckBuilder.prototype.load = function() {
 	this.deckManager.loadDeck(5);
 	this.searchManager.load();
+	this.draw();
 };
 
 DeckBuilder.prototype.onDeckLoad = function() {
 	this.sorter.applySort();
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
-		node.tweens.fadeIn.play();
+		node.tweens.fadeIn();
 	});
 	Builder.layers.mainBoard.draw();
 };

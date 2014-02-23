@@ -57,7 +57,7 @@ DeckManager.prototype.createCard = function(id) {
 			var obj = new Kinetic.Image({
 				x: 500,
 				y: -100,
-				opacity: 0,
+				opacity: 0.0,
 				draggable: true,
 				image: img,
 				scale: 0.4
@@ -67,7 +67,6 @@ DeckManager.prototype.createCard = function(id) {
 
 			obj.tweens = cardTweens(obj);
 			obj.hooks = cardHooks(obj);
-
 			_this.loadedCards++;
 			if (_this.loadedCards >= _this.deckSize) {
 				_this.loading = false;
