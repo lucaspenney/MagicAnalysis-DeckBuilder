@@ -19,7 +19,18 @@ function SearchManager() {
 }
 
 SearchManager.prototype.load = function() {
-	console.log("loading search");
+	//Maintain focus on search box
+	$('#search input').focus();
+	$('#search input').on('blur', function(e) {
+		if (e.relatedTarget) {
+			if (e.relatedTarget.id !== 'deckname') {
+				$(this).focus();
+			}
+		}
+	});
+	$('#deckname').on('blur', function(e) {
+		$('#search input').focus();
+	})
 	//Create card backdrops
 	var cardBack0 = new Kinetic.Image({
 		x: 0,
@@ -106,8 +117,10 @@ SearchManager.prototype.load = function() {
 
 SearchManager.prototype.setResults = function(data) {
 	this.searchResults = data;
-	this.selectedResult = this.searchResults[0].id;
-	this.updateDisplay();
+	if (this.searchResults[0] !== undefined) {
+		this.selectedResult = this.searchResults[0].id;
+		this.updateDisplay();
+	}
 };
 
 SearchManager.prototype.updateDisplay = function() {

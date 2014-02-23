@@ -31,6 +31,26 @@ function cardTweens(obj) {
 				}
 			});
 			tween.play();
+		},
+		scaleLarge: function() {
+			var tween = new Kinetic.Tween({
+				node: obj,
+				scaleX: 1.0,
+				scaleY: 1.0,
+				easing: Kinetic.Easings.Linear,
+				duration: 0.3,
+			});
+			tween.play();
+		},
+		scaleSmall: function() {
+			var tween = new Kinetic.Tween({
+				node: obj,
+				scaleX: 0.6,
+				scaleY: 0.6,
+				easing: Kinetic.Easings.Linear,
+				duration: 0.3,
+			});
+			tween.play();
 		}
 	};
 }

@@ -14,6 +14,7 @@ function cardHooks(obj) {
 		if (isRightMB) { //Do something if right mouse click
 			obj.tweens.fadeDelete();
 		}
+		obj.tweens.scaleLarge();
 	});
 
 	obj.on('dragend', function(e) {
@@ -46,6 +47,7 @@ function cardHooks(obj) {
 			previewMain.tweens.fadeIn();
 			Builder.searchManager.updateDisplay();
 		}
+		obj.tweens.scaleSmall();
 		Builder.draw();
 		Builder.sorter.applySort();
 		Builder.deckManager.saveDeck();
