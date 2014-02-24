@@ -3,12 +3,20 @@ canvas {
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 
-	 
-	transform: scale(0.6667,0.6667) translate(-375px,-275px); 
-	-ms-transform: scale(0.6667,0.6667) translate(-375px,-275px);  
-	-webkit-transform: scale(0.6667,0.6667) translate(-375px,-275px); 
-
+	transform: scale(0.6667,0.6667) translate(-375px,-475px); 
+	-ms-transform: scale(0.6667,0.6667) translate(-375px,-475px);  
+	-webkit-transform: scale(0.6667,0.6667) translate(-375px,-475px); 
 }
-#search select {
-	width: 234px !important;
+
+#deckbuilder {
+	margin: 5px;
+}
+
+#deckbuilder #search {
+	position: relative;
+	top: 475px;
+}
+
+#deckbuilder #search select, #search input {
+	width: 220px !important;
 }

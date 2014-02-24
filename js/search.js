@@ -25,8 +25,12 @@ SearchManager.prototype.load = function() {
 		if (e.relatedTarget) {
 			if (e.relatedTarget.id !== 'deckname') {
 				$(this).focus();
+				$(this)[0].setSelectionRange($(this).val().length, ($(this).val().length));
 			}
-		} else $(this).focus();
+		} else {
+			$(this).focus();
+			$(this)[0].setSelectionRange($(this).val().length, ($(this).val().length));
+		}
 	});
 	$('#deckname').on('blur', function(e) {
 		$('#search input').focus();
@@ -128,6 +132,7 @@ SearchManager.prototype.setResults = function(data) {
 
 SearchManager.prototype.updateDisplay = function() {
 	if (this.searchResults[0] === undefined) {
+		Builder.layers.search.draw();
 		return;
 	}
 

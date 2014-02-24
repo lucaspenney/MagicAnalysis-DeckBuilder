@@ -9,6 +9,17 @@ module.exports = function(grunt) {
 				dest: 'builder.js', // destination folder
 			}
 		},
+		copy: {
+			build: {
+				files: [{
+					src: ['builder.js'],
+					dest: 'build/'
+				}, {
+					src: ['css/style.css'],
+					dest: 'build/style.css'
+				}],
+			}
+		},
 		uglify: {
 			files: {
 				src: 'js/*', // source files mask
@@ -31,6 +42,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 
+	grunt.registerTask('build', ['concat', 'copy:build']);
 	grunt.registerTask('default', ['concat']);
 
 };

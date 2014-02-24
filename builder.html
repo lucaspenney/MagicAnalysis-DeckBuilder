@@ -1,18 +1,21 @@
 <html>
 
 <head>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src="js/vendor/jquery.js"></script>
 	<script src="js/vendor/kinetic.js"></script>
 </head>
 
 <body>
-	<input type="text" id="deckname"/>
+	<div id="deckbuilder">
+	<input type="text" id="deckname" placeholder="Deck Name"/>
 	<div id="search">
-		<input type="text"/>
+		<input type="text" placeholder="Search"/><br>
 		<select size='5'></select>
 	</div>
 	<div id="container" width="1500" height="1150">If you're seeing this, your browser does not support HTML5 CANVAS.</div>
 	<script src="builder.js"></script>
+	</div>
 </body>
 </html>
