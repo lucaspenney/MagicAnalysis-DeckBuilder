@@ -23,7 +23,7 @@ SearchManager.prototype.load = function() {
 	$('#search input').focus();
 	$('#search input').on('blur', function(e) {
 		if (e.relatedTarget) {
-			if (e.relatedTarget.id !== 'deckname') {
+			if (e.relatedTarget.id !== 'deckname' && e.relatedTarget.id !== 'searchselect') {
 				$(this).focus();
 				$(this)[0].setSelectionRange($(this).val().length, ($(this).val().length));
 			}

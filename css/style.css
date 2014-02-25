@@ -15,8 +15,14 @@ canvas {
 #deckbuilder #search {
 	position: relative;
 	top: 475px;
+	z-index:100;
+	width: 220px;
 }
 
-#deckbuilder #search select, #search input {
+#deckbuilder #search input {
+	width: 206px;
+}
+
+#deckbuilder #search select {
 	width: 220px !important;
 }

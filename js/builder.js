@@ -1,13 +1,9 @@
 var Builder = null;
-
-$(document).ready(function() {
+setTimeout(function() {
 	Builder = new DeckBuilder();
 	Builder.load();
 	Builder.layers.mainBoard.draw();
-
-	loop();
-});
-
+}, 1000);
 
 function DeckBuilder() {
 	this.lastSaved = null;
@@ -57,10 +53,6 @@ DeckBuilder.prototype.draw = function() {
 	Builder.layers.search.draw();
 };
 
-function loop() {
-	requestAnimationFrame(loop);
-}
-
-window.oncontextmenu = function() {
-	return false; //Disable right click context menu
-};
+$('#deckbuilder').on('contextmenu', function(e) {
+	e.preventDefault();
+});
