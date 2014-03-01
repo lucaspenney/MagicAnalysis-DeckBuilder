@@ -1,10 +1,20 @@
 function Sorter() {
 	this.sortType = 'cost';
+	this.values = 0;
+	this.cardScale = 0.65;
 }
 
 Sorter.prototype.applySort = function() {
 	this.sortMainBoard();
 	this.sortSideBoard();
+};
+
+Sorter.prototype.calculateCardScale = function() {
+	if (this.values < 7) {
+		this.cardScale = 0.65;
+	} else {
+		this.cardScale = 0.65 - ((this.values - 6) / (this.values * 1.65));
+	}
 };
 
 Sorter.prototype.sortMainBoard = function() {
@@ -13,11 +23,14 @@ Sorter.prototype.sortMainBoard = function() {
 		nodes.push(node);
 	});
 	this.sortByConvertedCost(nodes);
+	Builder.layers.mainBoard.getChildren().each(function(node, index) {
+		node.tweens.scaleMedium();
+	});
 };
 
 Sorter.prototype.sortSideBoard = function() {
 	Builder.layers.sideBoard.getChildren().each(function(node, index) {
-		var x = 1350;
+		var x = 1750;
 		var y = Math.floor(index) * 100;
 		node.moveTween = new Kinetic.Tween({
 			node: node,
@@ -56,6 +69,8 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 	values.sort(function(a, b) {
 		return a - b;
 	});
+	this.values = values.length;
+	this.calculateCardScale();
 
 	//Create sorted 2d array
 	var sorted = [];
@@ -75,7 +90,7 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 
 	for (var i = 0; i < sorted.length; i++) {
 		for (var k = 0; k < sorted[i].length; k++) {
-			var x = i * 200;
+			var x = i * (this.cardScale * 322);
 			var y = k * 100;
 			sorted[i][k].moveTween = new Kinetic.Tween({
 				node: sorted[i][k],

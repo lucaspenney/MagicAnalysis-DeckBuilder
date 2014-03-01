@@ -3,13 +3,27 @@ canvas {
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 
-	transform: scale(0.6667,0.6667) translate(-375px,-475px); 
-	-ms-transform: scale(0.6667,0.6667) translate(-375px,-475px);  
-	-webkit-transform: scale(0.6667,0.6667) translate(-375px,-475px); 
+	transform: scale(0.6667,0.6667) translate(-480px,-520px); 
+	-ms-transform: scale(0.6667,0.6667) translate(-480px,-520px);  
+	-webkit-transform: scale(0.6667,0.6667) translate(-480px,-520px); 
+}
+
+@media screen and (min-width: 1600px)
+{
+	canvas {
+	image-rendering: auto;
+	image-rendering: crisp-edges;
+	image-rendering: pixelated;
+
+	transform: scale(0.6667,0.6667) translate(-480px,-520px); 
+	-ms-transform: scale(0.6667,0.6667) translate(-480px,-520px);  
+	-webkit-transform: scale(0.6667,0.6667) translate(-480px,-520px); 
+	}
 }
 
 #deckbuilder {
 	margin: 5px;
+	margin-left: -40px;
 }
 
 #deckbuilder #search {

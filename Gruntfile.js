@@ -17,7 +17,16 @@ module.exports = function(grunt) {
 				}, {
 					src: ['css/style.css'],
 					dest: 'build/style.css'
-				}],
+				}, {
+					src: ['html/builder.html'],
+					dest: 'build/builder.html'
+				}, {
+					expand: true,
+					flatten: true,
+					src: ['build/**'],
+					dest: '../MagicAnalysis-Site/app/programs/deckbuilder/',
+					filter: 'isFile'
+				}]
 			}
 		},
 		uglify: {
@@ -32,7 +41,7 @@ module.exports = function(grunt) {
 		watch: {
 			scripts: {
 				files: 'js/**.js',
-				tasks: ['concat'],
+				tasks: ['concat', 'copy:build'],
 			}
 		},
 	});

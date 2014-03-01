@@ -2,7 +2,7 @@ $('#search input').keyup(function(e) {
 	var text = $('#search input').val();
 	if (text.length < 1 || (e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
 
-	$.get("../MagicAnalysis-site/api/searchcards?name=" + text, function(data) {
+	$.get("api/cardsearch?name=" + text, function(data) {
 		Builder.searchManager.setResults($.parseJSON(data));
 	});
 });
@@ -38,56 +38,25 @@ SearchManager.prototype.load = function() {
 	$('canvas').click(function(e) {
 		$('#search input').focus();
 	});
-	//Create card backdrops
-	var cardBack0 = new Kinetic.Image({
-		x: 0,
-		y: 0,
-		opacity: 1,
-		scale: 1.05,
-		image: this.cardBackImg,
-		name: 'cardBack'
-	});
-	var cardBack1 = new Kinetic.Image({
-		x: 0,
-		y: 450,
-		opacity: 1,
-		image: this.cardBackImg,
-		name: 'cardBack'
-	});
-	cardBack1.scale({
-		x: 0.5,
-		y: 0.5
-	});
-	var cardBack2 = new Kinetic.Image({
-		x: 156,
-		y: 450,
-		opacity: 1,
-		image: this.cardBackImg,
-		name: 'cardBack'
-	});
-	cardBack2.scale({
-		x: 0.5,
-		y: 0.5
-	});
 	//Card previews
 	var previewMain = new Kinetic.Image({
 		x: 0,
 		y: 0,
 		opacity: 1,
-		scale: 1.05,
+		scale: 1.3,
 		draggable: true,
 		name: 'previewMain'
 	});
 	var previewSmall1 = new Kinetic.Image({
 		x: 0,
-		y: 450,
-		scale: 0.5,
+		y: 474,
+		scale: 0.6,
 		name: 'previewSmall1'
 	});
 	var previewSmall2 = new Kinetic.Image({
-		x: 156,
-		y: 450,
-		scale: 0.5,
+		x: 166,
+		y: 474,
+		scale: 0.6,
 		name: 'previewSmall2'
 	});
 
@@ -104,9 +73,6 @@ SearchManager.prototype.load = function() {
 	previewSmall1.on('click', onPreviewClick);
 	previewSmall2.on('click', onPreviewClick);
 
-	Builder.layers.search.add(cardBack0);
-	Builder.layers.search.add(cardBack1);
-	Builder.layers.search.add(cardBack2);
 	Builder.layers.search.add(previewMain);
 	Builder.layers.search.add(previewSmall1);
 	Builder.layers.search.add(previewSmall2);
@@ -172,6 +138,10 @@ SearchManager.prototype.updateDisplay = function() {
 		if (name == 'previewMain') {
 			node.setImage(previews[0].image); //Main preview image
 			node.cardData = previews[0].data;
+			node.scale({
+				x: 1.05,
+				y: 1.05
+			});
 		} else if (name == 'previewSmall1') {
 			node.setImage(previews[1].image);
 			node.cardData = previews[1].data;
@@ -181,8 +151,8 @@ SearchManager.prototype.updateDisplay = function() {
 		}
 		if (name.indexOf('Small') !== -1) {
 			node.scale({
-				x: 0.5,
-				y: 0.5
+				x: 0.525,
+				y: 0.525
 			});
 		}
 	});

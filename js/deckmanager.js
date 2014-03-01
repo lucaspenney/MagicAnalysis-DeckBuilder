@@ -10,7 +10,7 @@ DeckManager.prototype.loadDeck = function(id) {
 	this.loading = true;
 	this.deckId = id;
 	var _this = this;
-	$.get("http://localhost/MagicAnalysis-site/api/getdeck?id=" + id, function(data) {
+	$.get("api/deck?id=" + id, function(data) {
 		data = $.parseJSON(data);
 		this.deckName = data.name;
 		$('#deckname').val(this.deckName);
@@ -41,7 +41,7 @@ DeckManager.prototype.saveDeck = function() {
 		cards: cards
 	};
 
-	$.post("http://localhost/MagicAnalysis-site/api/savedeck", {
+	$.post("api/deck", {
 		deck: data
 	}, function() {
 
@@ -50,7 +50,7 @@ DeckManager.prototype.saveDeck = function() {
 
 DeckManager.prototype.createCard = function(id, sideboard) {
 	var _this = this;
-	$.get("http://localhost/MagicAnalysis-site/api/getcard?id=" + id, function(data) {
+	$.get("api/card?id=" + id, function(data) {
 		var cardData = $.parseJSON(data);
 
 		var img = new Image();

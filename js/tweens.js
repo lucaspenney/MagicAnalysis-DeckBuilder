@@ -35,8 +35,8 @@ function cardTweens(obj) {
 		scaleLarge: function() {
 			var tween = new Kinetic.Tween({
 				node: obj,
-				scaleX: 1.0,
-				scaleY: 1.0,
+				scaleX: 1.05,
+				scaleY: 1.05,
 				easing: Kinetic.Easings.Linear,
 				duration: 0.3,
 			});
@@ -45,8 +45,8 @@ function cardTweens(obj) {
 		scaleMedium: function() {
 			var tween = new Kinetic.Tween({
 				node: obj,
-				scaleX: 0.6,
-				scaleY: 0.6,
+				scaleX: Builder.sorter.cardScale,
+				scaleY: Builder.sorter.cardScale,
 				easing: Kinetic.Easings.Linear,
 				duration: 0.3,
 			});

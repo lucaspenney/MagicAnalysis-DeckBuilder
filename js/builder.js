@@ -14,23 +14,36 @@ function DeckBuilder() {
 
 	this.stage = new Kinetic.Stage({
 		container: 'container',
-		width: 1000 * 1.5,
-		height: 750 * 1.5
+		width: 1280 * 1.5,
+		height: 800 * 1.5
 	});
 
 	this.layers = {
-		//background: new Kinetic.Layer(),
+		back: new Kinetic.Layer(),
 		mainBoard: new Kinetic.Layer(),
 		sideBoard: new Kinetic.Layer(),
 		search: new Kinetic.Layer()
 	};
 
+	this.stage.add(this.layers.back);
 	this.stage.add(this.layers.mainBoard);
 	this.stage.add(this.layers.sideBoard);
 	this.stage.add(this.layers.search);
 }
 
 DeckBuilder.prototype.load = function() {
+	var backgroundImg = new Image();
+	backgroundImg.src = "app/programs/deckbuilder/background.png";
+	backgroundImg.onload = function() {
+		var background = new Kinetic.Image({
+			x: 0,
+			y: 0,
+			image: backgroundImg
+		});
+		Builder.layers.back.add(background);
+		Builder.layers.back.draw();
+	};
+
 	this.deckManager.loadDeck(5);
 	this.searchManager.load();
 	this.draw();
@@ -48,6 +61,7 @@ DeckBuilder.prototype.onDeckLoad = function() {
 };
 
 DeckBuilder.prototype.draw = function() {
+	Builder.layers.back.draw();
 	Builder.layers.mainBoard.draw();
 	Builder.layers.sideBoard.draw();
 	Builder.layers.search.draw();

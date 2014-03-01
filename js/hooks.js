@@ -26,6 +26,7 @@ function cardHooks(obj) {
 				obj.y(0);
 				return;
 			}
+			Builder.sorter.applySort();
 			obj.tweens.scaleMedium();
 		} else if (obj.x() >= 1300) {
 			obj.moveTo(Builder.layers.sideBoard);
