@@ -10,6 +10,7 @@ function DeckBuilder() {
 	this.deckManager = new DeckManager();
 	this.searchManager = new SearchManager();
 	this.sorter = new Sorter();
+	this.grapher = new Grapher();
 
 
 	this.stage = new Kinetic.Stage({
@@ -33,7 +34,7 @@ function DeckBuilder() {
 
 DeckBuilder.prototype.load = function() {
 	var backgroundImg = new Image();
-	backgroundImg.src = "app/programs/deckbuilder/background.png";
+	backgroundImg.src = "/app/programs/deckbuilder/background.png";
 	backgroundImg.onload = function() {
 		var background = new Kinetic.Image({
 			x: 0,
@@ -44,7 +45,7 @@ DeckBuilder.prototype.load = function() {
 		Builder.layers.back.draw();
 	};
 
-	this.deckManager.loadDeck(5);
+	this.deckManager.loadDeck($('#deckid').val());
 	this.searchManager.load();
 	this.draw();
 };

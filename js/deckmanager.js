@@ -3,15 +3,14 @@ function DeckManager() {
 	this.deckSize = null;
 	this.deckId = null;
 	this.loading = false;
-	this.deckName = 'Test deck';
+	this.deckName = '';
 }
 
 DeckManager.prototype.loadDeck = function(id) {
 	this.loading = true;
 	this.deckId = id;
 	var _this = this;
-	$.get("api/deck?id=" + id, function(data) {
-		data = $.parseJSON(data);
+	$.get("/api/deck?id=" + id, function(data) {
 		this.deckName = data.name;
 		$('#deckname').val(this.deckName);
 		for (var i = 0; i < data.cards.length; i++) {
@@ -41,7 +40,7 @@ DeckManager.prototype.saveDeck = function() {
 		cards: cards
 	};
 
-	$.post("api/deck", {
+	$.post("/api/deck", {
 		deck: data
 	}, function() {
 
@@ -50,9 +49,8 @@ DeckManager.prototype.saveDeck = function() {
 
 DeckManager.prototype.createCard = function(id, sideboard) {
 	var _this = this;
-	$.get("api/card?id=" + id, function(data) {
-		var cardData = $.parseJSON(data);
-
+	$.get("/api/card?id=" + id, function(data) {
+		var cardData = data;
 		var img = new Image();
 		img.src = "http://magicanalysis.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
 		img.onload = function() {
