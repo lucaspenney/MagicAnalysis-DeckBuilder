@@ -22,6 +22,11 @@ module.exports = function(grunt) {
 					dest: 'build/builder.html'
 				}, {
 					expand: true,
+					cwd: 'img/',
+					src: ['*'],
+					dest: 'build/'
+				}, {
+					expand: true,
 					flatten: true,
 					src: ['build/**'],
 					dest: '../MagicAnalysis-Site/app/programs/deckbuilder/',
