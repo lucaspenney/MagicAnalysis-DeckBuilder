@@ -1,4 +1,4 @@
-canvas {
+#kinetic-container canvas {
 	image-rendering: auto;
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
@@ -10,7 +10,7 @@ canvas {
 
 @media screen and (min-width: 1600px)
 {
-	canvas {
+	#kinetic-container canvas {
 	image-rendering: auto;
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
