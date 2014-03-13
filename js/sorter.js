@@ -7,6 +7,7 @@ function Sorter() {
 Sorter.prototype.applySort = function() {
 	this.sortMainBoard();
 	this.sortSideBoard();
+	Builder.grapher.calculate();
 };
 
 Sorter.prototype.calculateCardScale = function() {

@@ -1,97 +1,85 @@
 function Grapher() {
-	$.jqplot.config.enablePlugins = true;
-	this.manaCostGraph = {
-		plot: null,
-		data: [
-			[4, 5],
-			[2, 3]
-		],
-		options: {
-			title: 'Some Plot',
-			seriesDefaults: {
-				renderer: $.jqplot.BarRenderer,
-				rendererOptions: {
-					barPadding: 1,
-					barMargin: 15,
-					barDirection: 'vertical',
-					barWidth: 50
-				}
-			},
-			axes: {
-				xaxis: {
-					renderer: $.jqplot.CategoryAxisRenderer,
-					ticks: 10
-				},
-				yaxis: {
-					tickOptions: {
-						formatString: '$%.2f'
-					}
-				}
-			},
-		}
-	};
+	this.loaded = false;
 }
 
 Grapher.prototype.load = function() {
 	//Let's make some graphs. 
-	//Graphs created by jqPlot
-	this.manaCostGraph.plot = $.jqplot('graphs', [this.manaCostGraph.data], this.manaCostGraph.options);
+	// Load the Visualization API and the piechart package.
+	var _this = this;
+	setTimeout(function() {
+		google.load('visualization', '1', {
+			'callback': 'Builder.grapher.onLoad()',
+			'packages': ['corechart']
+		});
+		_this.loaded = true;
+	}, 2000);
+	// Callback that creates and populates a data table,
+	// instantiates the pie chart, passes in the data and
+	// draws it. 
+};
+
+Grapher.prototype.onLoad = function() {
+	this.loaded = true;
+	this.calculate();
 };
 
 Grapher.prototype.calculate = function() {
-	//Recalculate the values of the graphs
-	var arr = [];
-	Builder.layers.mainBoard.getChildren().each(function(node, index) {
-		arr.push(node);
-	});
+	//recalculate and render the values of the graphs
 
-	var allValues = [];
-	var values = [];
-	for (var i = 0; i < arr.length; i++) {
-		if (arr[i] === undefined) continue;
-		if (arr[i].cardData === undefined) continue;
-		if (arr[i].cardData.cost === undefined) continue;
+	if (this.loaded && $('#graphs').length > 0) {
+		//Colors breakdown
+		var arr = [];
+		for (var i = 0; i < 5; i++) {
+			arr[i] = 0;
+		}
+		Builder.layers.mainBoard.getChildren().each(function(node, index) {
+			if (node.cardData.cost.indexOf("W") !== -1) {
+				arr[0] += 1;
+			}
+			if (node.cardData.cost.indexOf("U") !== -1) {
+				arr[1] += 1;
+			}
+			if (node.cardData.cost.indexOf("B") !== -1) {
+				arr[2] += 1;
+			}
+			if (node.cardData.cost.indexOf("R") !== -1) {
+				arr[3] += 1;
+			}
+			if (node.cardData.cost.indexOf("G") !== -1) {
+				arr[4] += 1;
+			}
+		});
 
-		//Todo: Clean up this ugly parsing of the converted cost (separate db field please)
-		var costStr = arr[i].cardData.cost;
-		var cost = costStr.substr(costStr.indexOf('('), costStr.indexOf(')'));
-		cost = cost.replace("(", "");
-		cost = cost.replace(")", "");
-		cost = cost.replace(/ /g, '');
-		cost = parseInt(cost);
-		if (arr[i].cardData.cost === '') cost = 0; //Land
-		arr[i].cardData.convertedCost = cost;
-		allValues.push(cost);
+		// Create the data table.
+		var data = new google.visualization.DataTable();
+		data.addColumn('string', 'Color');
+		data.addColumn('number', 'Amount');
+		data.addRows([
+			['White', arr[0]],
+			['Blue', arr[1]],
+			['Black', arr[2]],
+			['Red', arr[3]],
+			['Green', arr[4]]
+		]);
+
+		// Set chart options
+		var options = {
+			'title': 'Mana Colors',
+			'width': 400,
+			'height': 300,
+			'colors': ['#faebd7', 'blue', 'black', 'red', 'green']
+		};
+
+		// Instantiate and draw our chart, passing in some options.
+		var chart = new google.visualization.PieChart(document.getElementById('graphs'));
+		chart.draw(data, options);
 	}
-	values = allValues.filter(function(elem, pos) {
-		return allValues.indexOf(elem) == pos;
-	});
-	values.sort(function(a, b) {
-		return a - b;
-	});
+	// Load the Visualization API and the piechart package.
 
-	//Create sorted 2d array
-	var sorted = [];
-	for (var i = 0; i < values.length; i++) {
-		sorted[i] = [];
-	}
-	for (var i = 0; i < arr.length; i++) {
-		var index = values.indexOf(arr[i].cardData.convertedCost);
-		sorted[index]++;
-	}
 
-	console.log(sorted);
-	if (sorted.length > 1) {
-		//this.manaCostGraph = sorted;
-	} else return;
 
-	//Redraw them
-	this.render();
 }
 
 Grapher.prototype.render = function() {
-	if (this.manaCostGraph.plot) {
-		//this.manaCostGraph.plot.destroy();
-		//$.jqplot('graphs', [this.manaCostGraph.data], this.manaCostGraph.options);
-	}
+
 }
