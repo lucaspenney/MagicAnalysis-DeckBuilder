@@ -26,12 +26,52 @@ Grapher.prototype.onLoad = function() {
 
 Grapher.prototype.calculate = function() {
 	//recalculate and render the values of the graphs
-
 	if (this.loaded) {
 		this.calculateCardColorData();
 		this.calculateManaCostData();
+		this.calculateCardTypeData();
 	}
-}
+};
+
+Grapher.prototype.calculateCardTypeData = function() {
+	var types = [];
+	for (var i = 0; i < 7; i++) {
+		types[i] = [];
+		types[i][1] = 0;
+	}
+	types[0][0] = "Creature";
+	types[1][0] = "Sorcery";
+	types[2][0] = "Land";
+	types[3][0] = "Enchant";
+	types[4][0] = "Instant";
+	types[5][0] = "Planeswalker";
+	types[6][0] = "Artifact";
+	Builder.layers.mainBoard.getChildren().each(function(node, index) {
+		if (node.cardData.type.contains("creature") || node.cardData.type.contains("summon")) types[0][1]++;
+		else if (node.cardData.type.contains("sorcery")) types[1][1]++;
+		else if (node.cardData.type.contains("land")) types[2][1]++;
+		else if (node.cardData.type.contains("enchant")) types[3][1]++;
+		else if (node.cardData.type.contains("instant")) types[4][1]++;
+		else if (node.cardData.type.contains("planeswalker")) types[5][1]++;
+		else if (node.cardData.type.contains("artifact")) types[6][1]++;
+	});
+	var data = new google.visualization.DataTable();
+	data.addColumn('string', 'Color');
+	data.addColumn('number', 'Amount');
+	data.addRows(types);
+
+	// Set chart options
+	var options = {
+		'title': 'Card Type',
+		'width': 400,
+		'height': 300
+		//'colors': ['#faebd7', 'blue', 'black', 'red', 'green']
+	};
+
+	// Instantiate and draw our chart, passing in some options.
+	var chart = new google.visualization.PieChart(document.getElementById('graph3'));
+	chart.draw(data, options);
+};
 
 Grapher.prototype.calculateCardColorData = function() {
 	var arr = [];
@@ -142,4 +182,4 @@ Grapher.prototype.calculateManaCostData = function() {
 
 	var chart = new google.visualization.ColumnChart(document.getElementById('graph2'));
 	chart.draw(data, options);
-}
+};

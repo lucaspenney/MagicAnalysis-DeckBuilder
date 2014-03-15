@@ -73,3 +73,7 @@ DeckBuilder.prototype.draw = function() {
 $('#deckbuilder').on('contextmenu', function(e) {
 	e.preventDefault();
 });
+
+String.prototype.contains = function(it) {
+	return this.toLowerCase().indexOf(it) != -1;
+};
