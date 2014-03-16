@@ -86,17 +86,11 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 	for (var i = 0; i < arr.length; i++) {
 		if (arr[i] === undefined) continue;
 		if (arr[i].cardData === undefined) continue;
-		if (arr[i].cardData.cost === undefined) continue;
+		if (arr[i].cardData.converted_cost === undefined) continue;
 
-		var costStr = arr[i].cardData.cost;
-		var cost = costStr.substr(costStr.indexOf('('), costStr.indexOf(')'));
-		cost = cost.replace("(", "");
-		cost = cost.replace(")", "");
-		cost = cost.replace(/ /g, '');
-		cost = parseInt(cost);
-		if (arr[i].cardData.cost === '') cost = 0; //Land
-		arr[i].cardData.convertedCost = cost;
-		allValues.push(cost);
+		if (arr[i].cardData.converted_cost === '') arr[i].cardData.converted_cost = 0; //Land
+		arr[i].cardData.convertedCost = arr[i].cardData.converted_cost;
+		allValues.push(arr[i].cardData.convertedCost);
 	}
 	values = allValues.filter(function(elem, pos) {
 		return allValues.indexOf(elem) == pos;

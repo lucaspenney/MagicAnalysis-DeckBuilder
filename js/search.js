@@ -104,8 +104,8 @@ SearchManager.prototype.updateDisplay = function() {
 
 	var resultsSelection = '';
 	for (var i = 0; i < this.searchResults.length; i++) {
-		if (this.searchResults[i].id === this.selectedResult) resultsSelection += "<option selected value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + "</option>";
-		else resultsSelection += "<option value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + "</option>";
+		if (this.searchResults[i].id === this.selectedResult) resultsSelection += "<option selected value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + " (" + this.searchResults[i].set + ")" + "</option>";
+		else resultsSelection += "<option value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + " (" + this.searchResults[i].set + ")" + "</option>";
 	}
 	if ($('#search select').text() != $('<div/>').html(resultsSelection).text()) {
 		$('#search select').html(resultsSelection);
