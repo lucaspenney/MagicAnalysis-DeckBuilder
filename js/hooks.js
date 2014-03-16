@@ -19,15 +19,15 @@ function cardHooks(obj) {
 
 	obj.on('dragend', function(e) {
 		if (obj.x() < 1300) {
-			if (obj.x() > 200) {
+			if (obj.x() > 200 && obj.x() < 1400) {
 				obj.moveTo(Builder.layers.mainBoard);
-			} else {
+				obj.tweens.scaleMedium();
+			} else if (obj.name() == 'previewMain') {
 				obj.x(0);
 				obj.y(0);
 				return;
 			}
-			obj.tweens.scaleMedium();
-		} else if (obj.x() >= 1300) {
+		} else if (obj.x() >= 1400) {
 			obj.moveTo(Builder.layers.sideBoard);
 			obj.tweens.scaleSmall();
 		}
@@ -50,8 +50,8 @@ function cardHooks(obj) {
 			Builder.searchManager.updateDisplay();
 		}
 		Builder.draw();
-		Builder.sorter.applySort();
-		Builder.deckManager.saveDeck();
+		update();
+
 	});
 
 
@@ -61,3 +61,22 @@ function cardHooks(obj) {
 
 	return true;
 }
+
+//TODO: abstract this out?
+DeckBuilder.prototype.sortAndSave = debounce(function() {
+	Builder.sorter.applySort();
+	Builder.deckManager.saveDeck();
+	console.log("Deck saved");
+}, 50);
+
+function debounce(fn, delay) {
+	var timer = null;
+	return function() {
+		var context = this,
+			args = arguments;
+		clearTimeout(timer);
+		timer = setTimeout(function() {
+			fn.apply(context, args);
+		}, delay);
+	};
+};

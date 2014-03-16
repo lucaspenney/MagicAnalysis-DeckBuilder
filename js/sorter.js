@@ -31,7 +31,7 @@ Sorter.prototype.sortMainBoard = function() {
 
 Sorter.prototype.sortSideBoard = function() {
 	Builder.layers.sideBoard.getChildren().each(function(node, index) {
-		var x = 1750;
+		var x = 1600;
 		var y = Math.floor(index) * 100;
 		node.moveTween = new Kinetic.Tween({
 			node: node,
