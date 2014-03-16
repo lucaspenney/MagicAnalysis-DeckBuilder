@@ -23,8 +23,8 @@ Sorter.prototype.sortMainBoard = function() {
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		nodes.push(node);
 	});
-	if (this.sortType === 'cost') this.sortByConvertedCost();
-	else if (this.sortType === 'type') this.sortByCardType();
+	if (this.sortType === 'cost') this.sortByConvertedCost(nodes);
+	else if (this.sortType === 'type') this.sortByCardType(nodes);
 
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.tweens.scaleMedium();
