@@ -23,7 +23,9 @@ Sorter.prototype.sortMainBoard = function() {
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		nodes.push(node);
 	});
-	this.sortByConvertedCost(nodes);
+	if (this.sortType === 'cost') this.sortByConvertedCost();
+	else if (this.sortType === 'type') this.sortByCardType();
+
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.tweens.scaleMedium();
 	});
@@ -42,6 +44,38 @@ Sorter.prototype.sortSideBoard = function() {
 		});
 		node.moveTween.play();
 	});
+};
+
+Sorter.prototype.sortByCardType = function(arr) {
+	var sorted = [];
+	for (var i = 0; i < 7; i++) {
+		sorted[i] = [];
+	}
+	for (var i = 0; i < arr.length; i++) {
+		if (arr[i].cardData.type.contains("land")) sorted[0].push(arr[i]);
+		else if (arr[i].cardData.type.contains("creature") || arr[i].cardData.type.contains("summon")) sorted[1].push(arr[i]);
+		else if (arr[i].cardData.type.contains("sorcery")) sorted[2].push(arr[i]);
+		else if (arr[i].cardData.type.contains("enchant")) sorted[3].push(arr[i]);
+		else if (arr[i].cardData.type.contains("instant")) sorted[4].push(arr[i]);
+		else if (arr[i].cardData.type.contains("planeswalker")) sorted[5].push(arr[i]);
+		else if (arr[i].cardData.type.contains("artifact")) sorted[6].push(arr[i]);
+	}
+	this.cardScale = 0.54;
+	for (var i = 0; i < sorted.length; i++) {
+		for (var k = 0; k < sorted[i].length; k++) {
+			var x = i * (this.cardScale * 322);
+			var y = k * 100;
+			sorted[i][k].moveTween = new Kinetic.Tween({
+				node: sorted[i][k],
+				x: 350 + x,
+				y: y,
+				easing: Kinetic.Easings.Linear,
+				duration: 0.5
+			});
+			sorted[i][k].moveTween.play();
+			sorted[i][k].setZIndex(k);
+		}
+	}
 };
 
 Sorter.prototype.sortByConvertedCost = function(arr) {

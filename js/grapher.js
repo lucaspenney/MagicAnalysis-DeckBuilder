@@ -26,7 +26,7 @@ Grapher.prototype.onLoad = function() {
 
 Grapher.prototype.calculate = function() {
 	//recalculate and render the values of the graphs
-	if (this.loaded) {
+	if (this.loaded && google.visualization.DataTable !== undefined) {
 		this.calculateCardColorData();
 		this.calculateManaCostData();
 		this.calculateCardTypeData();

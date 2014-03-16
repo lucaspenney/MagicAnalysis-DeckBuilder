@@ -50,7 +50,7 @@ function cardHooks(obj) {
 			Builder.searchManager.updateDisplay();
 		}
 		Builder.draw();
-		update();
+		Builder.sortAndSave();
 
 	});
 
