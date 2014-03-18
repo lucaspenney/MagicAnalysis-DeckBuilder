@@ -5,7 +5,7 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		concat: {
 			build: {
-				src: 'js/*.js', // source files mask
+				src: ['js/*.js'], // source files mask
 				dest: 'builder.js', // destination folder
 			}
 		},
@@ -20,7 +20,12 @@ module.exports = function(grunt) {
 				}, {
 					src: ['html/builder.html'],
 					dest: 'build/builder.html'
-				}, {
+				},{
+					cwd: 'js/vendor/',
+					expand: true,
+					src: ['*.js'],
+					dest: 'build/'
+				},{
 					expand: true,
 					cwd: 'img/',
 					src: ['*'],
