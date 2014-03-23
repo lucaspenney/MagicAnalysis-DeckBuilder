@@ -20,12 +20,12 @@ module.exports = function(grunt) {
 				}, {
 					src: ['html/builder.html'],
 					dest: 'build/builder.html'
-				},{
+				}, {
 					cwd: 'js/vendor/',
 					expand: true,
 					src: ['*.js'],
 					dest: 'build/'
-				},{
+				}, {
 					expand: true,
 					cwd: 'img/',
 					src: ['*'],
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
 					expand: true,
 					flatten: true,
 					src: ['build/**'],
-					dest: '../MagicAnalysis-Site/app/programs/deckbuilder/',
+					dest: '../ManaStack/app/programs/deckbuilder/',
 					filter: 'isFile'
 				}]
 			}

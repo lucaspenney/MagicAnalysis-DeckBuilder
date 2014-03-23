@@ -50,7 +50,7 @@ DeckManager.prototype.createCard = function(id, sideboard) {
     $.get("/api/card?id=" + id, function(data) {
         var cardData = data;
         var img = new Image();
-        img.src = "http://magicanalysis.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
+        img.src = "http://manastack.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
         img.onload = function() {
             var obj = new Kinetic.Image({
                 x: 500,

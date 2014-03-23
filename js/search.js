@@ -15,7 +15,7 @@ function SearchManager() {
 	this.searchResults = [];
 	this.selectedResult = 0;
 	this.cardBackImg = new Image();
-	this.cardBackImg.src = "http://magicanalysis.com/cards/images/back.jpg";
+	this.cardBackImg.src = "http://manastack.com/cards/images/back.jpg";
 }
 
 SearchManager.prototype.load = function() {
@@ -124,7 +124,7 @@ SearchManager.prototype.updateDisplay = function() {
 	for (var i = selectedIndex; k < 3; i++) {
 		if (i > this.searchResults.length - 1) i = 0;
 		var img = new Image();
-		img.src = "http://magicanalysis.com/cards/images/" + this.searchResults[i].set + "/" + this.searchResults[i].num + ".jpg";
+		img.src = "http://manastack.com/cards/images/" + this.searchResults[i].set + "/" + this.searchResults[i].num + ".jpg";
 		previews.push({
 			image: img,
 			data: this.searchResults[i]
