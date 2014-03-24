@@ -2,7 +2,7 @@ $('#search input').keyup(function(e) {
 	var text = $('#search input').val();
 	if (text.length < 1 || (e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
 
-	$.get("/api/cardsearch?name=" + text, function(data) {
+	$.get("/api/cardSearch?name=" + text, function(data) {
 		Builder.searchManager.setResults(data);
 	});
 });
