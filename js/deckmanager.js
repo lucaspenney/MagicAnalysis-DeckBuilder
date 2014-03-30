@@ -15,7 +15,7 @@ DeckManager.prototype.loadDeck = function(id) {
         $('#deckname').val(this.deckName);
         for (var i = 0; i < data.deck.length; i++) {
             _this.deckSize = data.deck.length;
-            _this.createCard(data.deck[i].card.id, data.deck[i].sideboard);
+            _this.createCard(data.deck[i].card, data.deck[i].sideboard);
         }
     });
 };
@@ -44,43 +44,41 @@ DeckManager.prototype.saveDeck = function() {
     });
 };
 
-DeckManager.prototype.createCard = function(id, sideboard) {
+DeckManager.prototype.createCard = function(data, sideboard) {
+    var cardData = data;
     var _this = this;
-    $.get("/api/card?id=" + id, function(data) {
-        var cardData = data;
-        var img = new Image();
-        img.src = "http://manastack.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
-        img.onload = function() {
-            var obj = new Kinetic.Image({
-                x: 500,
-                y: -100,
-                opacity: 0.0,
-                draggable: true,
-                image: img,
-                scale: 0.4
-            });
-            obj.cardData = cardData;
+    var img = new Image();
+    img.src = "http://manastack.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
+    img.onload = function() {
+        var obj = new Kinetic.Image({
+            x: 500,
+            y: -100,
+            opacity: 0.0,
+            draggable: true,
+            image: img,
+            scale: 0.4
+        });
+        obj.cardData = cardData;
 
-            if (sideboard === '1') {
-                Builder.layers.sideBoard.add(obj);
-            } else {
-                Builder.layers.mainBoard.add(obj);
-            }
+        if (sideboard === '1') {
+            Builder.layers.sideBoard.add(obj);
+        } else {
+            Builder.layers.mainBoard.add(obj);
+        }
 
-            obj.tweens = cardTweens(obj);
-            obj.hooks = cardHooks(obj);
-            if (sideboard === '1') {
-                obj.tweens.scaleSmall();
-            } else {
-                obj.tweens.scaleMedium();
-            }
+        obj.tweens = cardTweens(obj);
+        obj.hooks = cardHooks(obj);
+        if (sideboard === '1') {
+            obj.tweens.scaleSmall();
+        } else {
+            obj.tweens.scaleMedium();
+        }
 
-            Builder.sorter.applySort();
-            _this.loadedCards++;
-            if (_this.loadedCards >= _this.deckSize) {
-                _this.loading = false;
-                Builder.onDeckLoad();
-            }
-        };
-    });
+        Builder.sorter.applySort();
+        _this.loadedCards++;
+        if (_this.loadedCards >= _this.deckSize) {
+            _this.loading = false;
+            Builder.onDeckLoad();
+        }
+    };
 };

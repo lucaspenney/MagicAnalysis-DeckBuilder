@@ -173,7 +173,6 @@ SearchManager.prototype.addResultToDeck = function() {
 		if (node.name() == 'previewMain') {
 			node.moveTo(Builder.layers.mainBoard);
 			node.tweens.scaleMedium();
-			Builder.sorter.applySort();
 		}
 	});
 	var previewMain = new Kinetic.Image({
@@ -189,4 +188,5 @@ SearchManager.prototype.addResultToDeck = function() {
 	previewMain.tweens = cardTweens(previewMain);
 	previewMain.tweens.fadeIn();
 	Builder.searchManager.updateDisplay();
+	Builder.sortAndSave();
 };
