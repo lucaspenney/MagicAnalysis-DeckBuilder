@@ -1,4 +1,7 @@
 $('#search input').keyup(function(e) {
+	if (e.keyCode === 13) {
+		Builder.searchManager.addResultToDeck();
+	}
 	var text = $('#search input').val();
 	if (text.length < 1 || (e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
 
@@ -97,6 +100,7 @@ SearchManager.prototype.setResults = function(data) {
 };
 
 SearchManager.prototype.updateDisplay = function() {
+	if (!Builder) return;
 	if (this.searchResults[0] === undefined) {
 		Builder.layers.search.draw();
 		return;
@@ -162,4 +166,21 @@ SearchManager.prototype.updateDisplay = function() {
 	setTimeout(function() {
 		_this.updateDisplay();
 	}, 500);
+};
+
+SearchManager.prototype.AddResultToDeck = function() {
+	Builder.layers.search.getChildren().each(function(node, index) {
+
+
+	});
+	var previewMain = new Kinetic.Image({
+		x: 0,
+		y: 0,
+		opacity: 1,
+		scale: 1.3,
+		draggable: true,
+		name: 'previewMain'
+	});
+	obj.moveTo(Builder.layers.mainBoard);
+	obj.tweens.scaleMedium();
 };

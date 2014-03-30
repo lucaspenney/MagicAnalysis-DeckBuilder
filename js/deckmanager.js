@@ -13,13 +13,12 @@ DeckManager.prototype.loadDeck = function(id) {
     $.get("/api/deck?id=" + id, function(data) {
         this.deckName = data.name;
         $('#deckname').val(this.deckName);
-        for (var i = 0; i < data.cards.length; i++) {
-            _this.deckSize = data.cards.length;
-            _this.createCard(data.cards[i].cardid, data.cards[i].sideboard);
+        for (var i = 0; i < data.deck.length; i++) {
+            _this.deckSize = data.deck.length;
+            _this.createCard(data.deck[i].card.id, data.deck[i].sideboard);
         }
     });
 };
-
 DeckManager.prototype.saveDeck = function() {
     var cards = [];
     Builder.layers.mainBoard.getChildren().each(function(node, index) {
