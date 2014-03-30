@@ -168,10 +168,13 @@ SearchManager.prototype.updateDisplay = function() {
 	}, 500);
 };
 
-SearchManager.prototype.AddResultToDeck = function() {
+SearchManager.prototype.addResultToDeck = function() {
 	Builder.layers.search.getChildren().each(function(node, index) {
-
-
+		if (node.name() == 'previewMain') {
+			node.moveTo(Builder.layers.mainBoard);
+			node.tweens.scaleMedium();
+			Builder.sorter.applySort();
+		}
 	});
 	var previewMain = new Kinetic.Image({
 		x: 0,
@@ -181,6 +184,9 @@ SearchManager.prototype.AddResultToDeck = function() {
 		draggable: true,
 		name: 'previewMain'
 	});
-	obj.moveTo(Builder.layers.mainBoard);
-	obj.tweens.scaleMedium();
+	Builder.layers.search.add(previewMain);
+	previewMain.hooks = cardHooks(previewMain);
+	previewMain.tweens = cardTweens(previewMain);
+	previewMain.tweens.fadeIn();
+	Builder.searchManager.updateDisplay();
 };
