@@ -12,45 +12,46 @@ function cardHooks(obj) {
 			isRightMB = e.button == 2;
 
 		if (isRightMB) { //Do something if right mouse click
+			obj.fire('delete');
 			obj.tweens.fadeDelete();
 		}
-		obj.tweens.scaleLarge();
+		obj.tweens.scaleLarge(); //Scale up while we're selecting a card
 	});
 
 	obj.on('dragend', function(e) {
-		if (obj.x() < 1300) {
-			if (obj.x() > 200 && obj.x() < 1400) {
-				obj.moveTo(Builder.layers.mainBoard);
-				obj.tweens.scaleMedium();
-			} else if (obj.name() == 'previewMain') {
-				obj.x(0);
-				obj.y(0);
-				return;
-			}
-		} else if (obj.x() >= 1400) {
-			obj.moveTo(Builder.layers.sideBoard);
-			obj.tweens.scaleSmall();
+		if (this.x() < 1300 && this.x() > 200) {
+			this.moveTo(Builder.layers.mainBoard);
+			this.fire('enterMainBoard');
+		} else if (this.x() >= 1400) {
+			this.moveTo(Builder.layers.sideBoard);
+			this.fire('enterSideBoard');
+		} else if (this.name() == 'previewMain') {
+			this.x(0);
+			this.y(0);
 		}
-		//If this card was dragged from the search field, recreate the search preview card
-		if (obj.name() == 'previewMain') {
-			obj.name('');
-			var previewMain = new Kinetic.Image({
-				x: 0,
-				y: 0,
-				opacity: 0.0,
-				scale: 1.05,
-				draggable: true,
-				name: 'previewMain'
-			});
+		Builder.sorter.applySort();
+		Builder.deckManager.saveDeck();
+	});
 
-			Builder.layers.search.add(previewMain);
-			previewMain.hooks = cardHooks(previewMain);
-			previewMain.tweens = cardTweens(previewMain);
-			previewMain.tweens.fadeIn();
-			Builder.searchManager.updateDisplay();
+	obj.on('enterMainBoard', function() {
+		//Card is placed on the main board
+		this.tweens.scaleMedium();
+		if (this.name() == 'previewMain') {
+			this.name('');
+			Builder.searchManager.createPreviewCard();
 		}
-		Builder.draw();
-		Builder.sortAndSave();
+	});
+
+	obj.on('enterSideBoard', function() {
+		//Card is placed on the side board
+		this.tweens.scaleSmall();
+		if (this.name() == 'previewMain') {
+			this.name('');
+			Builder.searchManager.createPreviewCard();
+		}
+	});
+
+	obj.on('delete', function() {
 
 	});
 
@@ -61,22 +62,3 @@ function cardHooks(obj) {
 
 	return true;
 }
-
-//TODO: abstract this out?
-DeckBuilder.prototype.sortAndSave = debounce(function() {
-	Builder.sorter.applySort();
-	Builder.deckManager.saveDeck();
-	console.log("Deck saved");
-}, 50);
-
-function debounce(fn, delay) {
-	var timer = null;
-	return function() {
-		var context = this,
-			args = arguments;
-		clearTimeout(timer);
-		timer = setTimeout(function() {
-			fn.apply(context, args);
-		}, delay);
-	};
-};

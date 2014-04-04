@@ -99,6 +99,23 @@ SearchManager.prototype.setResults = function(data) {
 	}
 };
 
+SearchManager.prototype.createPreviewCard = function() {
+	//Create the draggable preview card (used for replacing it)
+	var previewMain = new Kinetic.Image({
+		x: 0,
+		y: 0,
+		opacity: 0.0,
+		scale: 1.05,
+		draggable: true,
+		name: 'previewMain'
+	});
+	Builder.layers.search.add(previewMain);
+	previewMain.hooks = cardHooks(previewMain);
+	previewMain.tweens = cardTweens(previewMain);
+	previewMain.tweens.fadeIn();
+	this.updateDisplay();
+};
+
 SearchManager.prototype.updateDisplay = function() {
 	if (!Builder) return;
 	if (this.searchResults[0] === undefined) {

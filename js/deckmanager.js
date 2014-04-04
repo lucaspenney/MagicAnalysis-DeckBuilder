@@ -19,7 +19,7 @@ DeckManager.prototype.loadDeck = function(id) {
         }
     });
 };
-DeckManager.prototype.saveDeck = function() {
+DeckManager.prototype.saveDeck = debounce(function() {
     var cards = [];
     Builder.layers.mainBoard.getChildren().each(function(node, index) {
         cards.push({
@@ -42,6 +42,18 @@ DeckManager.prototype.saveDeck = function() {
     $.post("/api/deck", data, function() {
 
     });
+}, 100);
+
+function debounce(fn, delay) {
+    var timer = null;
+    return function() {
+        var context = this,
+            args = arguments;
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            fn.apply(context, args);
+        }, delay);
+    };
 };
 
 DeckManager.prototype.createCard = function(data, sideboard) {
