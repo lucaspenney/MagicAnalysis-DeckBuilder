@@ -204,6 +204,5 @@ SearchManager.prototype.addResultToDeck = function() {
 	previewMain.hooks = cardHooks(previewMain);
 	previewMain.tweens = cardTweens(previewMain);
 	previewMain.tweens.fadeIn();
-	Builder.searchManager.updateDisplay();
-	Builder.sortAndSave();
+	previewMain.fire('enterMainBoard');
 };

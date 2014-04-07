@@ -29,8 +29,6 @@ function cardHooks(obj) {
 			this.x(0);
 			this.y(0);
 		}
-		Builder.sorter.applySort();
-		Builder.deckManager.saveDeck();
 	});
 
 	obj.on('enterMainBoard', function() {
@@ -40,6 +38,8 @@ function cardHooks(obj) {
 			this.name('');
 			Builder.searchManager.createPreviewCard();
 		}
+		Builder.sorter.applySort();
+		Builder.deckManager.saveDeck();
 	});
 
 	obj.on('enterSideBoard', function() {
@@ -49,10 +49,13 @@ function cardHooks(obj) {
 			this.name('');
 			Builder.searchManager.createPreviewCard();
 		}
+		Builder.sorter.applySort();
+		Builder.deckManager.saveDeck();
 	});
 
 	obj.on('delete', function() {
-
+		Builder.sorter.applySort();
+		Builder.deckManager.saveDeck();
 	});
 
 
