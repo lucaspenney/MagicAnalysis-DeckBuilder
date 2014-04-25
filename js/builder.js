@@ -11,6 +11,7 @@ function DeckBuilder() {
 	this.searchManager = new SearchManager();
 	this.sorter = new Sorter();
 	this.grapher = new Grapher();
+	this.deckList = new DeckList();
 
 
 	this.stage = new Kinetic.Stage({
