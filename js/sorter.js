@@ -5,6 +5,7 @@ function Sorter() {
 }
 
 Sorter.prototype.applySort = function() {
+	if (!Builder.deckManager.loaded) return;
 	this.sortMainBoard();
 	this.sortSideBoard();
 	Builder.grapher.calculate();
@@ -25,18 +26,19 @@ Sorter.prototype.sortMainBoard = function() {
 };
 
 Sorter.prototype.sortSideBoard = function() {
-	Builder.layers.sideBoard.getChildren().each(function(node, index) {
+	var nodes = Builder.layers.sideBoard.getChildren().toArray();
+	for (var i = 0; i < nodes.length; i++) {
 		var x = 1600;
-		var y = Math.floor(index) * 100;
-		node.moveTween = new Kinetic.Tween({
-			node: node,
+		var y = Math.floor(i) * 100;
+		nodes[i].moveTween = new Kinetic.Tween({
+			node: nodes[i],
 			x: x,
 			y: y,
 			easing: Kinetic.Easings.Linear,
 			duration: 0.5
 		});
-		node.moveTween.play();
-	});
+		nodes[i].moveTween.play();
+	}
 };
 
 Sorter.prototype.sortByCardType = function(arr) {
@@ -99,29 +101,36 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 	for (var i = 0; i < values.length; i++) {
 		sorted[i] = [];
 	}
+
+	var sortFunc = function(a, b) {
+		if (a.cardData.name < b.cardData.name) return -1;
+		if (a.cardData.name > b.cardData.name) return 1;
+		return 0;
+	};
 	for (var i = 0; i < arr.length; i++) {
 		var index = values.indexOf(arr[i].cardData.convertedCost);
 		sorted[index].push(arr[i]);
 		//Sort the array by name, so cards don't get mixed in their column
-		sorted[index].sort(function(a, b) {
-			if (a.cardData.name < b.cardData.name) return -1;
-			if (a.cardData.name > b.cardData.name) return 1;
-			return 0;
-		});
+		sorted[index].sort(sortFunc);
 	}
 
 	for (var i = 0; i < sorted.length; i++) {
 		for (var k = 0; k < sorted[i].length; k++) {
-			var x = i * (this.cardScale * 322);
+			var x = 350 + (i * (this.cardScale * 322)); //Multiplier to width of 322
 			var y = k * 100;
+			sorted[i][k].x(x);
+			sorted[i][k].y(y);
+			/*
 			sorted[i][k].moveTween = new Kinetic.Tween({
 				node: sorted[i][k],
-				x: 350 + x,
+				x: x,
 				y: y,
 				easing: Kinetic.Easings.Linear,
 				duration: 0.5
 			});
+			console.log(sorted[i][k].moveTween);
 			sorted[i][k].moveTween.play();
+			*/
 			sorted[i][k].setZIndex(k);
 		}
 	}

@@ -2,12 +2,11 @@ function DeckManager() {
     this.loadedCards = 0;
     this.deckSize = null;
     this.deckId = null;
-    this.loading = false;
+    this.loaded = false;
     this.deckName = '';
 }
 
 DeckManager.prototype.loadDeck = function(id) {
-    this.loading = true;
     this.deckId = id;
     var _this = this;
     $.get("/api/deck?id=" + id, function(data) {
@@ -89,7 +88,7 @@ DeckManager.prototype.createCard = function(data, sideboard) {
         Builder.sorter.applySort();
         _this.loadedCards++;
         if (_this.loadedCards >= _this.deckSize) {
-            _this.loading = false;
+            _this.loaded = true;
             Builder.onDeckLoad();
         }
     };

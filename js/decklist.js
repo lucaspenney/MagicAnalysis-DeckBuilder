@@ -22,6 +22,5 @@ DeckList.prototype.load = function() {
 			html += line;
 		}
 		$("#decklist-modal .modal-body textarea").html(html);
-		console.log(this.html);
 	});
 };

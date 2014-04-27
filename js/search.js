@@ -81,8 +81,6 @@ SearchManager.prototype.load = function() {
 	Builder.layers.search.add(previewSmall2);
 	previewMain.hooks = cardHooks(previewMain);
 	previewMain.tweens = cardTweens(previewMain);
-	Builder.draw();
-	Builder.sorter.applySort();
 
 	setTimeout(function() {
 		_this.updateDisplay();
@@ -119,7 +117,10 @@ SearchManager.prototype.createPreviewCard = function() {
 SearchManager.prototype.updateDisplay = function() {
 	if (!Builder) return;
 	if (this.searchResults[0] === undefined) {
+		return;
 		Builder.layers.search.draw();
+	}
+	if (this.searchResults[0].length < 2) {
 		return;
 	}
 
@@ -178,7 +179,6 @@ SearchManager.prototype.updateDisplay = function() {
 		}
 	});
 
-	Builder.layers.search.draw();
 	var _this = this;
 	setTimeout(function() {
 		_this.updateDisplay();

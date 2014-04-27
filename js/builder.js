@@ -53,6 +53,7 @@ DeckBuilder.prototype.load = function() {
 };
 
 DeckBuilder.prototype.onDeckLoad = function() {
+	console.log("Deck Loaded");
 	this.sorter.applySort();
 	Builder.layers.mainBoard.getChildren().each(function(node, index) {
 		node.tweens.fadeIn();
