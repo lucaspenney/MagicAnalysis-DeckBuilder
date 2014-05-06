@@ -1,11 +1,12 @@
 function DeckList() {
 	this.decklist = [];
-	$('#decklist-button').on('click', function() {
-		Builder.deckList.load();
+	$('#decklist-button-get').on('click', function() {
+		Builder.deckList.get();
 	});
+	$('#decklist-button-load')
 }
 
-DeckList.prototype.load = function() {
+DeckList.prototype.get = function() {
 	$('#decklist-modal').modal({
 		backdrop: false
 	});
@@ -23,4 +24,8 @@ DeckList.prototype.load = function() {
 		}
 		$("#decklist-modal .modal-body textarea").html(html);
 	});
+};
+
+DeckList.prototype.load = function() {
+	//Load the modified deck list as the deck
 };

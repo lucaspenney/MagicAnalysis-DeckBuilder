@@ -38,3 +38,10 @@
 	position: absolute;
 	top: 725px;
 }
+
+#decklist-modal {
+	width: 60%;
+}
+#decklist-modal textarea {
+	width: 90%;
+}
