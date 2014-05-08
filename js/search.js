@@ -22,25 +22,6 @@ function SearchManager() {
 }
 
 SearchManager.prototype.load = function() {
-	//Maintain focus on search box
-	$('#search input').focus();
-	$('#search input').on('blur', function(e) {
-		if (e.relatedTarget) {
-			if (e.relatedTarget.id !== 'deckname' && e.relatedTarget.id !== 'searchselect') {
-				$(this).focus();
-				$(this)[0].setSelectionRange($(this).val().length, ($(this).val().length));
-			}
-		} else {
-			$(this).focus();
-			$(this)[0].setSelectionRange($(this).val().length, ($(this).val().length));
-		}
-	});
-	$('#deckname').on('blur', function(e) {
-		$('#search input').focus();
-	});
-	$('canvas').click(function(e) {
-		$('#search input').focus();
-	});
 	//Card previews
 	var previewMain = new Kinetic.Image({
 		x: 0,
