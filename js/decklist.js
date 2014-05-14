@@ -5,7 +5,7 @@ function DeckList() {
 	});
 	$('#decklist-button-load').on('click', function() {
 		Builder.deckList.load();
-	})
+	});
 }
 
 DeckList.prototype.get = function() {

@@ -2,7 +2,6 @@ var Builder = null;
 setTimeout(function() {
 	Builder = new DeckBuilder();
 	Builder.load();
-	Builder.layers.mainBoard.draw();
 }, 1000);
 
 function DeckBuilder() {
@@ -13,66 +12,57 @@ function DeckBuilder() {
 	this.grapher = new Grapher();
 	this.deckList = new DeckList();
 
-
-	this.stage = new Kinetic.Stage({
-		container: 'kinetic-container',
-		width: 1280 * 1.5,
-		height: 800 * 1.5
-	});
-
-	this.layers = {
-		back: new Kinetic.Layer(),
-		mainBoard: new Kinetic.Layer(),
-		sideBoard: new Kinetic.Layer(),
-		search: new Kinetic.Layer()
-	};
-
-	this.stage.add(this.layers.back);
-	this.stage.add(this.layers.mainBoard);
-	this.stage.add(this.layers.sideBoard);
-	this.stage.add(this.layers.search);
+	this.canvas = document.getElementById('deckbuilder-canvas');
+	this.ctx = this.canvas.getContext('2d');
+	this.cards = [];
 }
 
+function loop() {
+	if (Builder) {
+		Builder.render();
+	}
+	setTimeout(loop, 33);
+	//requestAnimationFrame(loop);
+}
+
+DeckBuilder.prototype.render = function() {
+	if (this.ctx === undefined) return;
+	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	//this.ctx.drawImage(this.backgroundImg, 0, 0);
+	this.cards.sort(function(a, b) {
+		if (a.z < b.z)
+			return -1;
+		if (a.z > b.z)
+			return 1;
+		return 0;
+	});
+
+	for (var i = 0; i < this.cards.length; i++) {
+		this.cards[i].render();
+	}
+};
+
 DeckBuilder.prototype.load = function() {
-	var backgroundImg = new Image();
-	backgroundImg.src = "/app/programs/deckbuilder/background.png";
-	backgroundImg.onload = function() {
-		var background = new Kinetic.Image({
-			x: 0,
-			y: 0,
-			image: backgroundImg
-		});
-		Builder.layers.back.add(background);
-		Builder.layers.back.draw();
+	this.backgroundImg = new Image();
+	this.backgroundImg.src = "/app/programs/deckbuilder/background.png";
+	this.backgroundImg.onload = function() {
+
 	};
 
 	this.deckManager.loadDeck($('#deckid').val());
 	this.searchManager.load();
 	this.grapher.load();
-	this.draw();
+	this.render();
 };
 
 DeckBuilder.prototype.onDeckLoad = function() {
 	console.log("Deck Loaded");
 	this.sorter.applySort();
-	Builder.layers.mainBoard.getChildren().each(function(node, index) {
-		node.tweens.fadeIn();
-	});
-	Builder.layers.sideBoard.getChildren().each(function(node, index) {
-		node.tweens.fadeIn();
-	});
-	Builder.layers.mainBoard.draw();
 	Builder.grapher.calculate();
+	loop();
 };
 
-DeckBuilder.prototype.draw = function() {
-	Builder.layers.back.draw();
-	Builder.layers.mainBoard.draw();
-	Builder.layers.sideBoard.draw();
-	Builder.layers.search.draw();
-};
-
-$('#deckbuilder').on('contextmenu', function(e) {
+$('#deckbuilder-canvas').on('contextmenu', function(e) {
 	e.preventDefault();
 });
 

@@ -18,25 +18,23 @@ DeckManager.prototype.loadDeck = function(id) {
         }
     });
 };
+
 DeckManager.prototype.saveDeck = debounce(function() {
-    var cards = [];
-    Builder.layers.mainBoard.getChildren().each(function(node, index) {
-        cards.push({
-            id: node.cardData.id,
-            sideboard: 0
+    var deck = [];
+    var cards = Builder.cards;
+    for (var i = 0; i < cards.length; i++) {
+        if (cards[i] === null) continue;
+        if (!cards[i].mainboard || !cards[i].sideboard) continue;
+        deck.push({
+            id: cards[i].cardData.id,
+            sideboard: cards[i].sideboard
         });
-    });
-    Builder.layers.sideBoard.getChildren().each(function(node, index) {
-        cards.push({
-            id: node.cardData.id,
-            sideboard: 1
-        });
-    });
+    }
 
     var data = {
         id: this.deckId,
         name: $('#deckname').val(),
-        cards: cards
+        cards: deck
     };
     $.post("/api/deck", data, function() {
 
@@ -58,38 +56,14 @@ function debounce(fn, delay) {
 DeckManager.prototype.createCard = function(data, sideboard) {
     var cardData = data;
     var _this = this;
-    var img = new Image();
-    img.src = "http://manastack.com/cards/images/" + cardData.set + "/" + cardData.num + ".jpg";
-    img.onload = function() {
-        var obj = new Kinetic.Image({
-            x: 500,
-            y: -100,
-            opacity: 0.0,
-            draggable: true,
-            image: img,
-            scale: 0.4
-        });
-        obj.cardData = cardData;
-
-        if (sideboard === '1') {
-            Builder.layers.sideBoard.add(obj);
-        } else {
-            Builder.layers.mainBoard.add(obj);
-        }
-
-        obj.tweens = cardTweens(obj);
-        obj.hooks = cardHooks(obj);
-        if (sideboard === '1') {
-            obj.tweens.scaleSmall();
-        } else {
-            obj.tweens.scaleMedium();
-        }
-
-        Builder.sorter.applySort();
+    var board = 1;
+    if (sideboard === '1') board = 2;
+    new Card(data, board, function() {
+        console.log(2);
         _this.loadedCards++;
         if (_this.loadedCards >= _this.deckSize) {
             _this.loaded = true;
             Builder.onDeckLoad();
         }
-    };
+    });
 };

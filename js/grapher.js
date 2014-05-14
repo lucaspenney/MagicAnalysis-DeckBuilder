@@ -48,7 +48,8 @@ Grapher.prototype.calculateCardTypeData = function() {
 	types[4][0] = "Instant";
 	types[5][0] = "Planeswalker";
 	types[6][0] = "Artifact";
-	Builder.layers.mainBoard.getChildren().each(function(node, index) {
+	for (var i = 0; i < Builder.cards.length; i++) {
+		node = Builder.cards[i];
 		if (node.cardData.type.contains("creature") || node.cardData.type.contains("summon")) types[0][1]++;
 		else if (node.cardData.type.contains("sorcery")) types[1][1]++;
 		else if (node.cardData.type.contains("land")) types[2][1]++;
@@ -56,7 +57,7 @@ Grapher.prototype.calculateCardTypeData = function() {
 		else if (node.cardData.type.contains("instant")) types[4][1]++;
 		else if (node.cardData.type.contains("planeswalker")) types[5][1]++;
 		else if (node.cardData.type.contains("artifact")) types[6][1]++;
-	});
+	}
 	var data = new google.visualization.DataTable();
 	data.addColumn('string', 'Color');
 	data.addColumn('number', 'Amount');
@@ -80,7 +81,8 @@ Grapher.prototype.calculateCardColorData = function() {
 	for (var i = 0; i < 5; i++) {
 		arr[i] = 0;
 	}
-	Builder.layers.mainBoard.getChildren().each(function(node, index) {
+	for (var i = 0; i < Builder.cards.length; i++) {
+		node = Builder.cards[i];
 		if (node.cardData.cost.indexOf("W") !== -1) {
 			arr[0] += 1;
 		}
@@ -96,7 +98,7 @@ Grapher.prototype.calculateCardColorData = function() {
 		if (node.cardData.cost.indexOf("G") !== -1) {
 			arr[4] += 1;
 		}
-	});
+	}
 	this.cardColorData = arr;
 
 	//Draw card color pie graph
@@ -127,9 +129,10 @@ Grapher.prototype.calculateCardColorData = function() {
 Grapher.prototype.calculateManaCostData = function() {
 
 	var arr = [];
-	Builder.layers.mainBoard.getChildren().each(function(node, index) {
+	for (var i = 0; i < Builder.cards.length; i++) {
+		node = Builder.cards[i];
 		arr.push(node);
-	});
+	}
 
 	var values = [];
 	for (var i = 0; i < arr.length; i++) {

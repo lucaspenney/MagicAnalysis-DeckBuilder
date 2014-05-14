@@ -1,11 +1,14 @@
-#kinetic-container canvas {
+#deckbuilder canvas {
 	image-rendering: auto;
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 
-	transform: scale(0.6667,0.6667) translate(-480px,-520px); 
-	-ms-transform: scale(0.6667,0.6667) translate(-480px,-520px);  
-	-webkit-transform: scale(0.6667,0.6667) translate(-480px,-520px); 
+	width: 1024px;
+	height: 768px;
+	margin-top:-150px;
+	background-image: url('/app/programs/deckbuilder/background.png');
+	background-size:1024px 768px;
+	background-repeat: no-repeat;
 }
 
 @media screen and (min-width: 1600px)

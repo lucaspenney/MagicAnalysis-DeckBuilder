@@ -12,32 +12,35 @@ Sorter.prototype.applySort = function() {
 };
 
 Sorter.prototype.calculateCardScale = function() {
-	if (this.values < 7) {
-		this.cardScale = 0.65;
+	if (this.values < 6) {
+		this.cardScale = 0.5;
 	} else {
-		this.cardScale = 0.65 - ((this.values - 6) / (this.values * 1.65));
+		this.cardScale = 0.5 - ((this.values - 6) / (this.values * 1.5));
 	}
+	console.log(this.cardScale);
 };
 
 Sorter.prototype.sortMainBoard = function() {
-	var nodes = Builder.layers.mainBoard.getChildren().toArray();
-	if (this.sortType === 'cost') this.sortByConvertedCost(nodes);
-	else if (this.sortType === 'type') this.sortByCardType(nodes);
+	var c = [];
+	for (var i = 0; i < Builder.cards.length; i++) {
+		if (Builder.cards[i].board === 1) {
+			c.push(Builder.cards[i]);
+		}
+	}
+	if (this.sortType === 'cost') this.sortByConvertedCost(c);
+	else if (this.sortType === 'type') this.sortByCardType(c);
 };
 
 Sorter.prototype.sortSideBoard = function() {
-	var nodes = Builder.layers.sideBoard.getChildren().toArray();
-	for (var i = 0; i < nodes.length; i++) {
-		var x = 1600;
-		var y = Math.floor(i) * 100;
-		nodes[i].moveTween = new Kinetic.Tween({
-			node: nodes[i],
-			x: x,
-			y: y,
-			easing: Kinetic.Easings.Linear,
-			duration: 0.5
-		});
-		nodes[i].moveTween.play();
+	var num = 0;
+	for (var i = 0; i < Builder.cards.length; i++) {
+		if (Builder.cards[i].board === 2) {
+			Builder.cards[i].targetx = 1400;
+			Builder.cards[i].targety = num * 25;
+			Builder.cards[i].z = num;
+			Builder.cards[i].targetCardScale = 0.3;
+			num++;
+		}
 	}
 };
 
@@ -62,7 +65,7 @@ Sorter.prototype.sortByCardType = function(arr) {
 			var y = k * 100;
 			sorted[i][k].moveTween = new Kinetic.Tween({
 				node: sorted[i][k],
-				x: 350 + x,
+				x: 325 + x,
 				y: y,
 				easing: Kinetic.Easings.Linear,
 				duration: 0.5
@@ -82,7 +85,6 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 		if (arr[i] === undefined) continue;
 		if (arr[i].cardData === undefined) continue;
 		if (arr[i].cardData.converted_cost === undefined) continue;
-
 		if (arr[i].cardData.converted_cost === '') arr[i].cardData.converted_cost = 0; //Land
 		arr[i].cardData.convertedCost = arr[i].cardData.converted_cost;
 		allValues.push(arr[i].cardData.convertedCost);
@@ -116,22 +118,12 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 
 	for (var i = 0; i < sorted.length; i++) {
 		for (var k = 0; k < sorted[i].length; k++) {
-			var x = 350 + (i * (this.cardScale * 322)); //Multiplier to width of 322
+			var x = 325 + (i * (this.cardScale * 322)); //Multiplier to width of 322
 			var y = k * 100;
-			sorted[i][k].x(x);
-			sorted[i][k].y(y);
-			/*
-			sorted[i][k].moveTween = new Kinetic.Tween({
-				node: sorted[i][k],
-				x: x,
-				y: y,
-				easing: Kinetic.Easings.Linear,
-				duration: 0.5
-			});
-			console.log(sorted[i][k].moveTween);
-			sorted[i][k].moveTween.play();
-			*/
-			sorted[i][k].setZIndex(k);
+			sorted[i][k].targetx = x;
+			sorted[i][k].targety = y;
+			sorted[i][k].z = k;
+			sorted[i][k].targetCardScale = this.cardScale;
 		}
 	}
 };
