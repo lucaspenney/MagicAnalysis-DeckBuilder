@@ -21,13 +21,14 @@ DeckManager.prototype.loadDeck = function(id) {
 
 DeckManager.prototype.saveDeck = debounce(function() {
     var deck = [];
-    var cards = Builder.cards;
-    for (var i = 0; i < cards.length; i++) {
-        if (cards[i] === null) continue;
-        if (!cards[i].mainboard || !cards[i].sideboard) continue;
+    for (var i = 0; i < Builder.cards.length; i++) {
+        if (Builder.cards[i] === null) continue;
+        if (Builder.cards[i].board === 0) continue;
+        var sideboard = 0;
+        if (Builder.cards[i].board === 2) sideboard = 1;
         deck.push({
-            id: cards[i].cardData.id,
-            sideboard: cards[i].sideboard
+            id: Builder.cards[i].cardData.id,
+            sideboard: sideboard
         });
     }
 
@@ -37,7 +38,7 @@ DeckManager.prototype.saveDeck = debounce(function() {
         cards: deck
     };
     $.post("/api/deck", data, function() {
-
+        console.log("Saved deck");
     });
 }, 100);
 
@@ -59,7 +60,6 @@ DeckManager.prototype.createCard = function(data, sideboard) {
     var board = 1;
     if (sideboard === '1') board = 2;
     new Card(data, board, function() {
-        console.log(2);
         _this.loadedCards++;
         if (_this.loadedCards >= _this.deckSize) {
             _this.loaded = true;

@@ -5,19 +5,19 @@ function Sorter() {
 }
 
 Sorter.prototype.applySort = function() {
-	if (!Builder.deckManager.loaded) return;
 	this.sortMainBoard();
 	this.sortSideBoard();
 	Builder.grapher.calculate();
+	Builder.deckManager.saveDeck();
 };
 
 Sorter.prototype.calculateCardScale = function() {
 	if (this.values < 6) {
-		this.cardScale = 0.5;
+		this.cardScale = 0.55;
 	} else {
-		this.cardScale = 0.5 - ((this.values - 6) / (this.values * 1.5));
+		//Scale cards down as they get closer to the side
+		this.cardScale = 0.55 - ((this.values - 5) * 0.065);
 	}
-	console.log(this.cardScale);
 };
 
 Sorter.prototype.sortMainBoard = function() {
@@ -35,10 +35,10 @@ Sorter.prototype.sortSideBoard = function() {
 	var num = 0;
 	for (var i = 0; i < Builder.cards.length; i++) {
 		if (Builder.cards[i].board === 2) {
-			Builder.cards[i].targetx = 1400;
+			Builder.cards[i].targetx = 1350;
 			Builder.cards[i].targety = num * 25;
 			Builder.cards[i].z = num;
-			Builder.cards[i].targetCardScale = 0.3;
+			Builder.cards[i].targetCardScale = 0.45;
 			num++;
 		}
 	}

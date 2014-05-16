@@ -32,15 +32,15 @@ Card.prototype.render = function() {
 	//point values if we can avoid them - in this way setting a scale or position
 	//to an integer value will eventually arrive *exactly* at that value 
 	if (Math.abs(this.cardScale - this.targetCardScale) > 0.01) {
-		this.cardScale += (this.targetCardScale - this.cardScale) * 0.03;
+		this.cardScale += (this.targetCardScale - this.cardScale) * 0.1;
 	} else this.cardScale = this.targetCardScale;
 
 	if (Math.abs(this.x - this.targetx) > 1) {
-		this.x += (this.targetx - this.x) * 0.05;
+		this.x += (this.targetx - this.x) * 0.1;
 	} else this.x = this.targetx;
 
 	if (Math.abs(this.y - this.targety) > 1) {
-		this.y += (this.targety - this.y) * 0.05;
+		this.y += (this.targety - this.y) * 0.1;
 	} else this.y = this.targety;
 };
 
@@ -72,7 +72,7 @@ $('#deckbuilder canvas').mousedown(function(e) {
 	if (!Builder.selectedCard) {
 		var x = (e.pageX - this.offsetLeft - 500) * 1.5;
 		var y = (e.pageY - this.offsetTop - 60) * 1.5;
-		for (var i = Builder.cards.length; i > 0; i--) {
+		for (var i = Builder.cards.length - 1; i >= 0; i--) {
 			if (Builder.cards[i]) {
 				if (Builder.cards[i].x < x && Builder.cards[i].x + (Builder.cards[i].width * Builder.cards[i].cardScale) > x) {
 					if (Builder.cards[i].y < y && Builder.cards[i].y + (Builder.cards[i].height * Builder.cards[i].cardScale) > y) {
@@ -89,18 +89,28 @@ $('#deckbuilder canvas').mousedown(function(e) {
 
 $('body').mouseup(function(e) {
 	if (!Builder.selectedCard) return;
-	if (Builder.selectedCard.board !== 1) {
-		if (Builder.selectedCard.x > 250 && Builder.selectedCard.x < 1300) Builder.selectedCard.board = 1;
+
+	var recreate = false;
+	var x = Builder.selectedCard.x;
+	var y = Builder.selectedCard.y;
+
+	if (x > 250 && x < 1300) {
+		if (Builder.selectedCard.board === 0) recreate = true;
+		Builder.selectedCard.board = 1;
+	} else if (x >= 1300) {
+		if (Builder.selectedCard.board === 0) recreate = true;
+		Builder.selectedCard.board = 2;
+	} else if (x <= 250) {
+		if (Builder.selectedCard.board === 0) {
+			Builder.selectedCard.targetx = 0;
+			Builder.selectedCard.targety = 0;
+			Builder.selectedCard.targetCardScale = 1.03;
+			Builder.selectedCard = null;
+		}
 	}
-	if (Builder.selectedCard.board !== 2) {
-		if (Builder.selectedCard.x > 1300) Builder.selectedCard.board = 2;
-	}
-	if (Builder.selectedCard.board === 0) {
-		Builder.selectedCard = null;
-		Builder.selectedCard.targetx = 0;
-		Builder.selectedCard.targety = 0;
-		e.preventDefault();
+	if (recreate) {
+		Builder.searchManager.createPreviewCard();
 	}
 	Builder.selectedCard = null;
 	Builder.sorter.applySort();
-})
+});

@@ -2,6 +2,7 @@ var Builder = null;
 setTimeout(function() {
 	Builder = new DeckBuilder();
 	Builder.load();
+	loop();
 }, 1000);
 
 function DeckBuilder() {
@@ -28,7 +29,7 @@ function loop() {
 DeckBuilder.prototype.render = function() {
 	if (this.ctx === undefined) return;
 	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	//this.ctx.drawImage(this.backgroundImg, 0, 0);
+
 	this.cards.sort(function(a, b) {
 		if (a.z < b.z)
 			return -1;
@@ -59,7 +60,6 @@ DeckBuilder.prototype.onDeckLoad = function() {
 	console.log("Deck Loaded");
 	this.sorter.applySort();
 	Builder.grapher.calculate();
-	loop();
 };
 
 $('#deckbuilder-canvas').on('contextmenu', function(e) {

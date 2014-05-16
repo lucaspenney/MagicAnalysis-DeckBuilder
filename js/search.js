@@ -1,7 +1,9 @@
-$('#search input').keyup(function(e) {
+$('body').keyup(function(e) {
 	if (e.keyCode === 13) {
 		Builder.searchManager.addResultToDeck();
 	}
+})
+$('#search input').keyup(function(e) {
 	var text = $('#search input').val();
 	if (text.length < 1 || (e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
 
@@ -12,6 +14,7 @@ $('#search input').keyup(function(e) {
 
 $('#search select').change(function(e) {
 	Builder.searchManager.selectedResult = $(this).val();
+	Builder.searchManager.updateDisplay();
 });
 
 function SearchManager() {
@@ -23,7 +26,6 @@ function SearchManager() {
 
 SearchManager.prototype.load = function() {
 	//Card previews
-
 };
 
 
@@ -40,8 +42,10 @@ SearchManager.prototype.createPreviewCard = function() {
 	//Create the draggable preview card (used for replacing it)
 	this.previewCard = new Card(this.searchResults[this.selectedIndex], 0);
 	this.previewCard.targetCardScale = 1.03;
+	this.previewCard.board = 0;
 	Builder.sorter.applySort();
 	this.updateDisplay();
+	console.log(this.previewCard);
 };
 
 SearchManager.prototype.updateDisplay = function() {
@@ -55,8 +59,6 @@ SearchManager.prototype.updateDisplay = function() {
 
 	if (this.previewCard) {
 		if (this.previewCard.board !== 0) this.previewCard = null;
-		console.log("W" + this.previewCard.width * this.previewCard.targetCardScale);
-		console.log("H" + this.previewCard.height * this.previewCard.targetCardScale);
 	}
 
 	var resultsSelection = '';
