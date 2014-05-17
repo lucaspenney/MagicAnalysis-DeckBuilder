@@ -87,6 +87,6 @@ SearchManager.prototype.updateDisplay = function() {
 
 SearchManager.prototype.addResultToDeck = function() {
 	this.previewCard.board = 1;
-	this.createPreviewCard();
+	this.updateDisplay();
 	Builder.sorter.applySort();
 };
