@@ -45,7 +45,6 @@ SearchManager.prototype.createPreviewCard = function() {
 	this.previewCard.board = 0;
 	Builder.sorter.applySort();
 	this.updateDisplay();
-	console.log(this.previewCard);
 };
 
 SearchManager.prototype.updateDisplay = function() {

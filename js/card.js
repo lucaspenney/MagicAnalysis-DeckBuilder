@@ -114,3 +114,23 @@ $('body').mouseup(function(e) {
 	Builder.selectedCard = null;
 	Builder.sorter.applySort();
 });
+
+$('#deckbuilder canvas').bind("contextmenu", function(e) {
+	//Right click delete card
+	var x = (e.pageX - this.offsetLeft - 500) * 1.5;
+	var y = (e.pageY - this.offsetTop - 60) * 1.5;
+	for (var i = Builder.cards.length - 1; i >= 0; i--) {
+		if (Builder.cards[i]) {
+			if (Builder.cards[i].x < x && Builder.cards[i].x + (Builder.cards[i].width * Builder.cards[i].cardScale) > x) {
+				if (Builder.cards[i].y < y && Builder.cards[i].y + (Builder.cards[i].height * Builder.cards[i].cardScale) > y) {
+					Builder.cards.splice(i, 1);
+					break;
+				}
+			}
+		}
+	}
+
+	//Block the regular context menu
+	e.preventDefault();
+	return false;
+});
