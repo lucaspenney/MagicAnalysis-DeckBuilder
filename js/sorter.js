@@ -104,16 +104,15 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 		sorted[i] = [];
 	}
 
-	var sortFunc = function(a, b) {
-		if (a.cardData.name < b.cardData.name) return -1;
-		if (a.cardData.name > b.cardData.name) return 1;
-		return 0;
-	};
+	function lexCmp(a, b) {
+		return String(a.name).localeCompare(b.name);
+	}
+
 	for (var i = 0; i < arr.length; i++) {
 		var index = values.indexOf(arr[i].cardData.convertedCost);
 		sorted[index].push(arr[i]);
 		//Sort the array by name, so cards don't get mixed in their column
-		sorted[index].sort(sortFunc);
+		sorted[index] = stable(sorted[index], lexCmp);
 	}
 
 	for (var i = 0; i < sorted.length; i++) {
@@ -127,3 +126,75 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 		}
 	}
 };
+
+
+
+//Stable sort implementation
+//! stable.js 0.1.5, https://github.com/Two-Screen/stable
+//! © 2014 Angry Bytes and contributors. MIT licensed.
+(function() {
+	function t(e, t) {
+		if (typeof t !== "function") {
+			t = function(e, t) {
+				return String(e).localeCompare(t)
+			}
+		}
+		var r = e.length;
+		if (r <= 1) {
+			return e
+		}
+		var i = new Array(r);
+		for (var s = 1; s < r; s *= 2) {
+			n(e, t, s, i);
+			var o = e;
+			e = i;
+			i = o
+		}
+		return e
+	}
+	var e = function(e, n) {
+		return t(e.slice(), n)
+	};
+	e.inplace = function(e, r) {
+		var i = t(e, r);
+		if (i !== e) {
+			n(i, null, e.length, e)
+		}
+		return e
+	};
+	var n = function(e, t, n, r) {
+		var i = e.length;
+		var s = 0;
+		var o = n * 2;
+		var u, a, f;
+		var l, c;
+		for (u = 0; u < i; u += o) {
+			a = u + n;
+			f = a + n;
+			if (a > i) a = i;
+			if (f > i) f = i;
+			l = u;
+			c = a;
+			while (true) {
+				if (l < a && c < f) {
+					if (t(e[l], e[c]) <= 0) {
+						r[s++] = e[l++]
+					} else {
+						r[s++] = e[c++]
+					}
+				} else if (l < a) {
+					r[s++] = e[l++]
+				} else if (c < f) {
+					r[s++] = e[c++]
+				} else {
+					break
+				}
+			}
+		}
+	};
+	if (typeof module !== "undefined") {
+		module.exports = e
+	} else {
+		window.stable = e
+	}
+})()
