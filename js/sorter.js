@@ -105,7 +105,9 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 	}
 
 	function lexCmp(a, b) {
-		return String(a.name).localeCompare(b.name);
+		if (a.cardData.name < b.cardData.name) return -1;
+		if (a.cardData.name > b.cardData.name) return 1;
+		return 0;
 	}
 
 	for (var i = 0; i < arr.length; i++) {
