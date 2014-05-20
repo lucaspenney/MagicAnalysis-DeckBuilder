@@ -11,6 +11,7 @@ function Card(data, board, onload) {
 	this.cardScale = 0.42;
 	this.cardData = data;
 	this.board = board;
+	this.targetAlpha = 1.0;
 	this.loaded = false;
 	var _this = this;
 	this.img = new Image();
@@ -42,10 +43,23 @@ Card.prototype.render = function() {
 	if (Math.abs(this.y - this.targety) > 1) {
 		this.y += (this.targety - this.y) * 0.1;
 	} else this.y = this.targety;
+
+	if (Math.abs(this.alpha - this.targetAlpha) > 0.01) {
+		this.alpha += (this.targetAlpha - this.alpha) * 0.1;
+	} else this.alpha = this.targetAlpha;;
 };
 
-Card.prototype.remove = function() {
-
+Card.prototype.destroy = function() {
+	var _this = this;
+	setTimeout(function() {
+		for (var i = 0; i < Builder.cards.length; i++) {
+			if (Builder.cards[i] === _this) {
+				Builder.cards.splice(i, 1);
+				Builder.sorter.applySort();
+				break;
+			}
+		}
+	}, 750);
 };
 
 Card.prototype.loadImage = function() {
@@ -123,7 +137,8 @@ $('#deckbuilder canvas').bind("contextmenu", function(e) {
 		if (Builder.cards[i]) {
 			if (Builder.cards[i].x < x && Builder.cards[i].x + (Builder.cards[i].width * Builder.cards[i].cardScale) > x) {
 				if (Builder.cards[i].y < y && Builder.cards[i].y + (Builder.cards[i].height * Builder.cards[i].cardScale) > y) {
-					Builder.cards.splice(i, 1);
+					Builder.cards[i].targetAlpha = 0;
+					Builder.cards[i].destroy();
 					break;
 				}
 			}

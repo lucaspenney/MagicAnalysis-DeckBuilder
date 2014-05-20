@@ -3,11 +3,10 @@
 	image-rendering: crisp-edges;
 	image-rendering: pixelated;
 
-	width: 1024px;
+	width: 1100px;
 	height: 768px;
 	margin-top:-150px;
 	background-image: url('/app/programs/deckbuilder/background.png');
-	background-size:1024px 768px;
 	background-repeat: no-repeat;
 }
 
