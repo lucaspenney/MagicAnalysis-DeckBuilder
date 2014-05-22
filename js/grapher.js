@@ -67,7 +67,8 @@ Grapher.prototype.calculateCardTypeData = function() {
 	var options = {
 		'title': 'Card Type',
 		'width': 400,
-		'height': 300
+		'height': 300,
+		'backgroundColor': "transparent"
 		//'colors': ['#faebd7', 'blue', 'black', 'red', 'green']
 	};
 
@@ -118,7 +119,8 @@ Grapher.prototype.calculateCardColorData = function() {
 		'title': 'Mana Colors',
 		'width': 400,
 		'height': 300,
-		'colors': ['#faebd7', 'blue', 'black', 'red', 'green']
+		'colors': ['#faebd7', 'blue', 'black', 'red', 'green'],
+		'backgroundColor': "transparent"
 	};
 
 	// Instantiate and draw our chart, passing in some options.
@@ -182,7 +184,8 @@ Grapher.prototype.calculateManaCostData = function() {
 		},
 		'width': 400,
 		'height': 300,
-		'colors': ['#00CC35']
+		'colors': ['#00CC35'],
+		'backgroundColor': "transparent"
 	};
 
 	var chart = new google.visualization.ColumnChart(document.getElementById('graph2'));
