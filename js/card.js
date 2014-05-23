@@ -72,10 +72,15 @@ Card.prototype.loadImage = function() {
 	};
 }
 
-$('#deckbuilder canvas').mousemove(function(e) {
+$('#deckbuilder').mousemove(function(e) {
 	if (!Builder) return;
-	var x = (e.pageX - this.offsetLeft - 500) * 1.5;
-	var y = (e.pageY - this.offsetTop - 60) * 1.5;
+	//Subtracting raw offsets based on the canvas's position on the page.
+	//If the canvas moves, these need to be updated.
+	//TODO: Fix this
+	var x = e.pageX - 315;
+	var y = e.pageY - 130;
+	x *= 1.5;
+	y *= 1.5;
 	if (Builder.selectedCard) {
 		Builder.selectedCard.targetx = x;
 		Builder.selectedCard.targety = y;
@@ -84,8 +89,10 @@ $('#deckbuilder canvas').mousemove(function(e) {
 
 $('#deckbuilder canvas').mousedown(function(e) {
 	if (!Builder.selectedCard) {
-		var x = (e.pageX - this.offsetLeft - 500) * 1.5;
-		var y = (e.pageY - this.offsetTop - 60) * 1.5;
+		var x = e.pageX - 315;
+		var y = e.pageY - 130;
+		x *= 1.5;
+		y *= 1.5;
 		for (var i = Builder.cards.length - 1; i >= 0; i--) {
 			if (Builder.cards[i]) {
 				if (Builder.cards[i].x < x && Builder.cards[i].x + (Builder.cards[i].width * Builder.cards[i].cardScale) > x) {
@@ -131,8 +138,10 @@ $('body').mouseup(function(e) {
 
 $('#deckbuilder canvas').bind("contextmenu", function(e) {
 	//Right click delete card
-	var x = (e.pageX - this.offsetLeft - 500) * 1.5;
-	var y = (e.pageY - this.offsetTop - 60) * 1.5;
+	var x = e.pageX - 315;
+	var y = e.pageY - 130;
+	x *= 1.5;
+	y *= 1.5;
 	for (var i = Builder.cards.length - 1; i >= 0; i--) {
 		if (Builder.cards[i]) {
 			if (Builder.cards[i].x < x && Builder.cards[i].x + (Builder.cards[i].width * Builder.cards[i].cardScale) > x) {

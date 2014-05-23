@@ -15,9 +15,6 @@ module.exports = function(grunt) {
 					src: ['builder.js'],
 					dest: 'build/'
 				}, {
-					src: ['css/style.css'],
-					dest: 'build/style.css'
-				}, {
 					src: ['html/builder.html'],
 					dest: 'build/builder.html'
 				}, {
