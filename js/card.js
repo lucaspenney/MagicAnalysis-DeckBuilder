@@ -72,15 +72,17 @@ Card.prototype.loadImage = function() {
 	};
 }
 
-$('#deckbuilder').mousemove(function(e) {
+$('#deckbuilder canvas').mousemove(function(e) {
 	if (!Builder) return;
 	//Subtracting raw offsets based on the canvas's position on the page.
 	//If the canvas moves, these need to be updated.
 	//TODO: Fix this
-	var x = e.pageX - 315;
-	var y = e.pageY - 130;
-	x *= 1.5;
-	y *= 1.5;
+	var rect = e.target.getBoundingClientRect();
+	var x = e.offsetX || e.pageX - rect.left - window.scrollX,
+		y = e.offsetY || e.pageY - rect.top - window.scrollY;
+	if (x) x = x * 1.5;
+	if (y) y = y * 1.5;
+
 	if (Builder.selectedCard) {
 		Builder.selectedCard.targetx = x;
 		Builder.selectedCard.targety = y;
@@ -89,10 +91,11 @@ $('#deckbuilder').mousemove(function(e) {
 
 $('#deckbuilder canvas').mousedown(function(e) {
 	if (!Builder.selectedCard) {
-		var x = e.pageX - 315;
-		var y = e.pageY - 130;
-		x *= 1.5;
-		y *= 1.5;
+		var rect = e.target.getBoundingClientRect();
+		var x = e.offsetX || e.pageX - rect.left - window.scrollX,
+			y = e.offsetY || e.pageY - rect.top - window.scrollY;
+		if (x) x = x * 1.5;
+		if (y) y = y * 1.5;
 		for (var i = Builder.cards.length - 1; i >= 0; i--) {
 			if (Builder.cards[i]) {
 				if (Builder.cards[i].x < x && Builder.cards[i].x + (Builder.cards[i].width * Builder.cards[i].cardScale) > x) {
@@ -108,12 +111,15 @@ $('#deckbuilder canvas').mousedown(function(e) {
 	}
 });
 
-$('body').mouseup(function(e) {
+$('#deckbuilder canvas').mouseup(function(e) {
 	if (!Builder.selectedCard) return;
 
 	var recreate = false;
-	var x = Builder.selectedCard.x;
-	var y = Builder.selectedCard.y;
+	var rect = e.target.getBoundingClientRect();
+	var x = e.offsetX || e.pageX - rect.left - window.scrollX,
+		y = e.offsetY || e.pageY - rect.top - window.scrollY;
+	if (x) x = x * 1.5;
+	if (y) y = y * 1.5;
 
 	if (x > 250 && x < 1300) {
 		if (Builder.selectedCard.board === 0) recreate = true;
@@ -138,10 +144,11 @@ $('body').mouseup(function(e) {
 
 $('#deckbuilder canvas').bind("contextmenu", function(e) {
 	//Right click delete card
-	var x = e.pageX - 315;
-	var y = e.pageY - 130;
-	x *= 1.5;
-	y *= 1.5;
+	var rect = e.target.getBoundingClientRect();
+	var x = e.offsetX || e.pageX - rect.left - window.scrollX,
+		y = e.offsetY || e.pageY - rect.top - window.scrollY;
+	if (x) x = x * 1.5;
+	if (y) y = y * 1.5;
 	for (var i = Builder.cards.length - 1; i >= 0; i--) {
 		if (Builder.cards[i]) {
 			if (Builder.cards[i].x < x && Builder.cards[i].x + (Builder.cards[i].width * Builder.cards[i].cardScale) > x) {
