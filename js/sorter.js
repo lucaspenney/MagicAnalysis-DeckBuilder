@@ -13,10 +13,10 @@ Sorter.prototype.applySort = function() {
 
 Sorter.prototype.calculateCardScale = function() {
 	if (this.values < 6) {
-		this.cardScale = 0.55;
+		this.cardScale = 0.6;
 	} else {
 		//Scale cards down as they get closer to the side
-		this.cardScale = 0.55 - ((this.values - 5) * 0.065);
+		this.cardScale = 0.6 - ((this.values - 5) * 0.060);
 	}
 };
 
@@ -32,15 +32,18 @@ Sorter.prototype.sortMainBoard = function() {
 };
 
 Sorter.prototype.sortSideBoard = function() {
-	var num = 0;
+	var cards = [];
 	for (var i = 0; i < Builder.cards.length; i++) {
 		if (Builder.cards[i].board === 2) {
-			Builder.cards[i].targetx = 1350;
-			Builder.cards[i].targety = num * 25;
-			Builder.cards[i].z = num;
-			Builder.cards[i].targetCardScale = 0.45;
-			num++;
+			cards.push(Builder.cards[i]);
 		}
+	}
+	cards = stable(cards, lexCmp);
+	for (var i = 0; i < cards.length; i++) {
+		cards[i].targetx = 1450;
+		cards[i].targety = 50 + i * 75;
+		cards[i].z = i;
+		cards[i].targetCardScale = 0.5;
 	}
 };
 
@@ -86,7 +89,7 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 		if (arr[i].cardData === undefined) continue;
 		if (arr[i].cardData.converted_cost === undefined) continue;
 		if (arr[i].cardData.converted_cost === '') arr[i].cardData.converted_cost = 0; //Land
-		arr[i].cardData.convertedCost = arr[i].cardData.converted_cost;
+		arr[i].cardData.convertedCost = parseInt(arr[i].cardData.converted_cost);
 		allValues.push(arr[i].cardData.convertedCost);
 	}
 	values = allValues.filter(function(elem, pos) {
@@ -104,12 +107,6 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 		sorted[i] = [];
 	}
 
-	function lexCmp(a, b) {
-		if (a.cardData.name < b.cardData.name) return -1;
-		if (a.cardData.name > b.cardData.name) return 1;
-		return 0;
-	}
-
 	for (var i = 0; i < arr.length; i++) {
 		var index = values.indexOf(arr[i].cardData.convertedCost);
 		sorted[index].push(arr[i]);
@@ -119,7 +116,7 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 
 	for (var i = 0; i < sorted.length; i++) {
 		for (var k = 0; k < sorted[i].length; k++) {
-			var x = 325 + (i * (this.cardScale * 322)); //Multiplier to width of 322
+			var x = 330 + (i * (this.cardScale * 322)); //Multiplier to width of 322
 			var y = k * 70;
 			if (sorted[i].length > 13) y = k * ((13 / sorted[i].length) * 70);
 			sorted[i][k].targetx = x;
@@ -131,6 +128,11 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 };
 
 
+function lexCmp(a, b) {
+	if (a.cardData.name < b.cardData.name) return -1;
+	if (a.cardData.name > b.cardData.name) return 1;
+	return 0;
+}
 
 //Stable sort implementation
 //! stable.js 0.1.5, https://github.com/Two-Screen/stable
