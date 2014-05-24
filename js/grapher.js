@@ -30,7 +30,7 @@ Grapher.prototype.calculate = function() {
 	if (!google.visualization) return;
 	if (this.loaded && google.visualization.DataTable !== undefined) {
 		var cards = [];
-		for (var i=0;i<Builder.cards.length;i++) {
+		for (var i = 0; i < Builder.cards.length; i++) {
 			cards.push(Builder.cards[i].cardData);
 		}
 		createCardTypeGraph("#graph1", cards);
@@ -38,7 +38,3 @@ Grapher.prototype.calculate = function() {
 		createCardManaCostGraph("#graph3", cards);
 	}
 };
-
-Grapher.prototype.calculateCardTypeData = function() {
-
-}

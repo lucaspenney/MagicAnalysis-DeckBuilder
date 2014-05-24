@@ -1,8 +1,11 @@
 $('body').keyup(function(e) {
 	if (e.keyCode === 13) {
 		Builder.searchManager.addResultToDeck();
+	} else if (e.keyCode === 38 || e.keyCode === 40) {
+		//Up down arrow presses (navigate through results
+		Builder.searchManager.navigateSearchResults(e.keyCode === 38);
 	}
-})
+});
 $('#search input').keyup(function(e) {
 	var text = $('#search input').val();
 	if (text.length < 1 || (e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
@@ -90,3 +93,21 @@ SearchManager.prototype.addResultToDeck = debounce(function() {
 	this.updateDisplay();
 	Builder.sorter.applySort();
 }, 50);
+
+SearchManager.prototype.navigateSearchResults = debounce(function(up) {
+	if (!up) {
+		var curIndex = $("#search select option:selected").index();
+		curIndex += 1;
+		var option = $($("#search select option").get(curIndex));
+		option.prop('selected', 'selected');
+		Builder.searchManager.selectedResult = option.val();
+		Builder.searchManager.updateDisplay();
+	} else {
+		var curIndex = $("#search select option:selected").index();
+		curIndex -= 1;
+		var option = $($("#search select option").get(curIndex));
+		option.prop('selected', 'selected');
+		Builder.searchManager.selectedResult = option.val();
+		Builder.searchManager.updateDisplay();
+	}
+}, 50);;

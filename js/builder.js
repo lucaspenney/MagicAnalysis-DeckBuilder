@@ -22,7 +22,7 @@ function loop() {
 	if (Builder) {
 		Builder.render();
 	}
-	setTimeout(loop, 60);
+	setTimeout("requestAnimationFrame(loop)", 30);
 	//requestAnimationFrame(loop);
 }
 
