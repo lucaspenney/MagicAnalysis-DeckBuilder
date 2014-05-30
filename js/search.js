@@ -7,13 +7,47 @@ $('body').keyup(function(e) {
 	}
 });
 $('#search input').keyup(function(e) {
-	var text = $('#search input').val();
-	if (text.length < 1 || (e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
+	if ((e.keyCode !== 8 && e.keyCode < 48) || e.keyCode > 90) return; //Ignore non-character input
 
-	$.get("/api/cardSearch?name=" + text, function(data) {
-		Builder.searchManager.setResults(data);
-	});
+	Builder.searchManager.searchRequest();
 });
+
+$('#search input[type=checkbox]').click(function(e) {
+	Builder.searchManager.searchRequest();
+});
+
+SearchManager.prototype.searchRequest = debounce(function() {
+	var colors = '';
+	$("#search input[type=checkbox]").each(function() {
+		if ($(this).is(':checked')) {
+			colors = colors + $(this).attr('class');
+		}
+	});
+	var search = {
+		name: $("#search .name").val(),
+		sets: $("#search .sets").val(),
+		text: $("#search .text").val(),
+		type: $("#search .type").val(),
+		colors: colors
+	};
+	console.log(search);
+
+	function EncodeQueryData(data) {
+		var ret = [];
+		for (var d in data) {
+			if (data[d].length > 0 && data[d] != 'undefined')
+				ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));
+		}
+		return ret.join("&");
+	}
+
+	var query = EncodeQueryData(search);
+
+	$.get("/api/cardSearch?" + query, function(data) {
+		if (data.length > 0)
+			Builder.searchManager.setResults(data);
+	});
+}, 100);
 
 $('#search select').change(function(e) {
 	Builder.searchManager.selectedResult = $(this).val();
@@ -30,8 +64,6 @@ function SearchManager() {
 SearchManager.prototype.load = function() {
 	//Card previews
 };
-
-
 
 SearchManager.prototype.setResults = function(data) {
 	this.searchResults = data;
