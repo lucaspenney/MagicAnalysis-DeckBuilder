@@ -17,6 +17,7 @@ DeckManager.prototype.loadDeck = function(id) {
         for (var i = 0; i < data.deck.length; i++) {
             _this.deckSize = data.deck.length;
             _this.createCard(data.deck[i].card, data.deck[i].sideboard);
+            Builder.deckManager.getDeckList();
         }
     });
 };
@@ -42,6 +43,7 @@ DeckManager.prototype.saveDeck = debounce(function() {
     };
     $.post("/api/deck", data, function() {
         console.log("Saved deck");
+        Builder.deckManager.getDeckList();
     });
 }, 100);
 
@@ -70,3 +72,19 @@ DeckManager.prototype.createCard = function(data, sideboard) {
         }
     });
 };
+
+DeckManager.prototype.getDeckList = debounce(function() {
+    $.get("/api/deck/list?id=" + Builder.deckManager.deckId, function(data) {
+        this.decklist = data.list;
+        var html = '';
+        var data = data.list;
+        for (var i = 0; i < data.length; i++) {
+            var line = '';
+            line += data[i].count + ' ';
+            line += data[i].cardname;
+            line += "<br>";
+            html += line;
+        }
+        $("#decklist").html(html);
+    });
+}, 500);
