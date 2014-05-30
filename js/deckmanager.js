@@ -11,7 +11,9 @@ DeckManager.prototype.loadDeck = function(id) {
     var _this = this;
     $.get("/api/deck?id=" + id, function(data) {
         this.deckName = data.name;
+        this.deckDescription = data.description;
         $('#deckname').val(this.deckName);
+        $('#deckdescription').html(this.deckDescription);
         for (var i = 0; i < data.deck.length; i++) {
             _this.deckSize = data.deck.length;
             _this.createCard(data.deck[i].card, data.deck[i].sideboard);
@@ -35,6 +37,7 @@ DeckManager.prototype.saveDeck = debounce(function() {
     var data = {
         id: this.deckId,
         name: $('#deckname').val(),
+        description: $("#deckdescription").val(),
         cards: deck
     };
     $.post("/api/deck", data, function() {
