@@ -22,6 +22,14 @@ DeckManager.prototype.loadDeck = function(id) {
     });
 };
 
+$("#deckname").keyup(function(e) {
+    Builder.deckManager.saveDeck();
+});
+$("#deckdescription").keyup(function(e) {
+    Builder.deckManager.saveDeck();
+});
+
+
 DeckManager.prototype.saveDeck = debounce(function() {
     var deck = [];
     for (var i = 0; i < Builder.cards.length; i++) {
@@ -45,7 +53,7 @@ DeckManager.prototype.saveDeck = debounce(function() {
         console.log("Saved deck");
         Builder.deckManager.getDeckList();
     });
-}, 100);
+}, 250);
 
 function debounce(fn, delay) {
     var timer = null;
