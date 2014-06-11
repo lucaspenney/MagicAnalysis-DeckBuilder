@@ -14,9 +14,9 @@ DeckManager.prototype.loadDeck = function(id) {
         this.deckDescription = data.description;
         $('#deckname').val(this.deckName);
         $('#deckdescription').html(this.deckDescription);
-        for (var i = 0; i < data.deck.length; i++) {
-            _this.deckSize = data.deck.length;
-            _this.createCard(data.deck[i].card, data.deck[i].sideboard);
+        for (var i = 0; i < data.cards.length; i++) {
+            _this.deckSize = data.cards.length;
+            _this.createCard(data.cards[i].card, data.cards[i].sideboard);
             Builder.deckManager.getDeckList();
         }
     });
@@ -54,18 +54,6 @@ DeckManager.prototype.saveDeck = debounce(function() {
         Builder.deckManager.getDeckList();
     });
 }, 250);
-
-function debounce(fn, delay) {
-    var timer = null;
-    return function() {
-        var context = this,
-            args = arguments;
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-            fn.apply(context, args);
-        }, delay);
-    };
-};
 
 DeckManager.prototype.createCard = function(data, sideboard) {
     var cardData = data;
