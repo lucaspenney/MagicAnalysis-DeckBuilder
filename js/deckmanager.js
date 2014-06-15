@@ -73,14 +73,19 @@ DeckManager.prototype.getDeckList = debounce(function() {
     $.get("/api/deck/list?id=" + Builder.deckManager.deckId, function(data) {
         this.decklist = data.list;
         var html = '';
-        var data = data.list;
-        for (var i = 0; i < data.length; i++) {
-            var line = '';
-            line += data[i].count + ' ';
-            line += data[i].cardname;
-            line += "<br>";
-            html += line;
-        }
+        var data = data.grouped;
+        for (var prop in data) {
+            if (data.hasOwnProperty(prop)) {
+                if (data[prop][0] === undefined) continue;
+                var line = "<div class='half pull-left'><h3>" + prop + "</h3>";
+                for (var i=0;i<data[prop].length;i++) {
+                    line += "<a class='cardlink' data-cardset='" + JSON.stringify(data[prop][i].set) + "' data-cardnum='" + data[prop][i].num + "'>" +
+                    data[prop][i].count + " " + data[prop][i].name + "</a><br>";
+                }
+                line += "</div>";
+            }
+            html += line
+;        }
         $("#decklist").html(html);
     });
 }, 500);
