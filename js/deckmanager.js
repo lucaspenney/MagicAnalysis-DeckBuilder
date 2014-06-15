@@ -14,6 +14,9 @@ DeckManager.prototype.loadDeck = function(id) {
         this.deckDescription = data.description;
         $('#deckname').val(this.deckName);
         $('#deckdescription').html(this.deckDescription);
+        if (data.published) {
+            $("#deckpublish").prop('checked', true);
+        }
         for (var i = 0; i < data.cards.length; i++) {
             _this.deckSize = data.cards.length;
             _this.createCard(data.cards[i].card, data.cards[i].sideboard);
@@ -42,11 +45,16 @@ DeckManager.prototype.saveDeck = debounce(function() {
             sideboard: sideboard
         });
     }
-
+    var published = $("#deckpublish").prop('checked');
+    if (deck.length < 40 || !published) {
+        published = false;
+        $("#deckpublish").prop('checked', false);
+    }
     var data = {
         id: this.deckId,
         name: $('#deckname').val(),
         description: $("#deckdescription").val(),
+        publish: published,
         cards: deck
     };
     $.post("/api/deck", data, function() {
