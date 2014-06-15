@@ -4,6 +4,14 @@ function DeckManager() {
     this.deckId = null;
     this.loaded = false;
     this.deckName = '';
+    this.onSetsLoaded = function(){};
+    var that = this;
+    $.get("/api/formats", function(data) {
+        for (var i=0;i<data.length;i++) {
+            $('#deckformat').append("<option value='" + data[i].id + "'>" + data[i].name + "</option>");
+        }
+        that.onSetsLoaded();
+    });
 }
 
 DeckManager.prototype.loadDeck = function(id) {
@@ -16,6 +24,17 @@ DeckManager.prototype.loadDeck = function(id) {
         $('#deckdescription').html(this.deckDescription);
         if (data.published) {
             $("#deckpublish").prop('checked', true);
+        }
+        var that = this;
+        if (data.format) {
+            that.onSetsLoaded = function() {
+                $("#deckformat option").each(function() {
+                    if ($(this).val() == data.format.id) $(this).prop('selected', true);
+                    console.log($(this).val());
+                    console.log(data.format.id);
+                });
+            }
+            that.onSetsLoaded();
         }
         for (var i = 0; i < data.cards.length; i++) {
             _this.deckSize = data.cards.length;
@@ -55,6 +74,7 @@ DeckManager.prototype.saveDeck = debounce(function() {
         name: $('#deckname').val(),
         description: $("#deckdescription").val(),
         publish: published,
+        format: $("#deckformat").val(),
         cards: deck
     };
     $.post("/api/deck", data, function() {
