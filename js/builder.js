@@ -16,6 +16,8 @@ function DeckBuilder() {
 	this.canvas = document.getElementById('deckbuilder-canvas');
 	this.ctx = this.canvas.getContext('2d');
 	this.cards = [];
+	this.fps = 0;
+	this.lastFrame = 0;
 }
 
 function loop() {
@@ -40,6 +42,19 @@ DeckBuilder.prototype.render = function() {
 
 	for (var i = 0; i < this.cards.length; i++) {
 		this.cards[i].render();
+	}
+	this.updateFPS();
+	this.ctx.fillStyle = "#FFFFFF";
+	this.ctx.fillText("FPS: " + this.fps.toFixed(2), 1560,10);
+};
+
+DeckBuilder.prototype.updateFPS = function() {
+	var now = new Date;
+	var thisFrameFPS = 1000 / (now - this.lastFrame);
+	var fpsFilter = 30;
+	if (now!=this.lastFrame){
+		this.fps += (thisFrameFPS - this.fps) / fpsFilter;
+		this.lastFrame = now;
 	}
 };
 

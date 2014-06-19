@@ -33,7 +33,7 @@ DeckManager.prototype.loadDeck = function(id) {
                     console.log($(this).val());
                     console.log(data.format.id);
                 });
-            }
+            };
             that.onSetsLoaded();
         }
         for (var i = 0; i < data.cards.length; i++) {
@@ -101,11 +101,12 @@ DeckManager.prototype.getDeckList = debounce(function() {
     $.get("/api/deck/list?id=" + Builder.deckManager.deckId, function(data) {
         this.decklist = data.list;
         var html = '';
-        var data = data.grouped;
+        var line = '';
+        data = data.grouped;
         for (var prop in data) {
             if (data.hasOwnProperty(prop)) {
                 if (data[prop][0] === undefined) continue;
-                var line = "<div class='half pull-left'><h3>" + prop + "</h3>";
+                line = "<div class='half pull-left'><h3>" + prop + "</h3>";
                 for (var i=0;i<data[prop].length;i++) {
                     line += "<a class='cardlink' data-cardset='" + JSON.stringify(data[prop][i].set) + "' data-cardnum='" + data[prop][i].num + "'>" +
                     data[prop][i].count + " " + data[prop][i].name + "</a><br>";
