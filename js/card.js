@@ -32,20 +32,27 @@ Card.prototype.render = function() {
 	//These are conditional with some rounding, as we don't want to have floating
 	//point values if we can avoid them - in this way setting a scale or position
 	//to an integer value will eventually arrive *exactly* at that value 
+	var frames = Builder.fps;
+	if (frames > 30) frames = 30;
+	var animSpeed = (30 - Builder.fps) / 30;
+	if (animSpeed < 0.1) animSpeed = 0.1;
+	if (animSpeed > 0.8) animSpeed = 0.8;
+	//Builder.ctx.fillStyle = "#FFF";
+	//Builder.ctx.fillText(animSpeed, 50,50);
 	if (Math.abs(this.cardScale - this.targetCardScale) > 0.01) {
-		this.cardScale += (this.targetCardScale - this.cardScale) * 0.1;
+		this.cardScale += (this.targetCardScale - this.cardScale) * animSpeed;
 	} else this.cardScale = this.targetCardScale;
 
 	if (Math.abs(this.x - this.targetx) > 1) {
-		this.x += (this.targetx - this.x) * 0.1;
+		this.x += (this.targetx - this.x) * animSpeed;
 	} else this.x = this.targetx;
 
 	if (Math.abs(this.y - this.targety) > 1) {
-		this.y += (this.targety - this.y) * 0.1;
+		this.y += (this.targety - this.y) * animSpeed;
 	} else this.y = this.targety;
 
 	if (Math.abs(this.alpha - this.targetAlpha) > 0.01) {
-		this.alpha += (this.targetAlpha - this.alpha) * 0.1;
+		this.alpha += (this.targetAlpha - this.alpha) * animSpeed;
 	} else this.alpha = this.targetAlpha;;
 };
 
