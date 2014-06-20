@@ -113,8 +113,7 @@ DeckManager.prototype.getDeckList = debounce(function() {
                 }
                 line += "</div>";
             }
-            html += line
-;        }
+            html += line;        }
         $("#decklist").html(html);
     });
 }, 500);
