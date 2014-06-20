@@ -49,6 +49,7 @@ DeckBuilder.prototype.render = function() {
 };
 
 DeckBuilder.prototype.updateFPS = function() {
+	var oldfps = this.fps;
 	var now = new Date;
 	var thisFrameFPS = 1000 / (now - this.lastFrame);
 	var fpsFilter = 30;
@@ -56,6 +57,7 @@ DeckBuilder.prototype.updateFPS = function() {
 		this.fps += (thisFrameFPS - this.fps) / fpsFilter;
 		this.lastFrame = now;
 	}
+	if (isNaN(this.fps)) this.fps = oldfps;
 };
 
 DeckBuilder.prototype.load = function() {
