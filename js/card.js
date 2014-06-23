@@ -129,8 +129,17 @@ $('#deckbuilder canvas').mouseup(function(e) {
 	if (y) y = y * 1.5;
 
 	if (x > 250 && x < 1300) {
-		if (Builder.selectedCard.board === 0) recreate = true;
-		Builder.selectedCard.board = 1;
+		if (Builder.selectedCard.board === 0) {
+			if (!Builder.deckManager.addCardToDeck(Builder.selectedCard)) {
+				Builder.selectedCard.targetx = 0;
+				Builder.selectedCard.targety = 0;
+				Builder.selectedCard.targetCardScale = 1.03;
+				Builder.selectedCard = null;
+				return;
+			} else {
+				recreate = true;
+			}
+		}
 	} else if (x >= 1300) {
 		if (Builder.selectedCard.board === 0) recreate = true;
 		Builder.selectedCard.board = 2;

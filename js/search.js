@@ -121,9 +121,8 @@ SearchManager.prototype.updateDisplay = function() {
 };
 
 SearchManager.prototype.addResultToDeck = debounce(function() {
-	this.previewCard.board = 1;
+	Builder.deckManager.addCardToDeck(this.previewCard);
 	this.updateDisplay();
-	Builder.sorter.applySort();
 }, 50);
 
 SearchManager.prototype.navigateSearchResults = debounce(function(up) {

@@ -4,10 +4,10 @@ function DeckManager() {
     this.deckId = null;
     this.loaded = false;
     this.deckName = '';
-    this.onSetsLoaded = function(){};
+    this.onSetsLoaded = function() {};
     var that = this;
     $.get("/api/formats", function(data) {
-        for (var i=0;i<data.length;i++) {
+        for (var i = 0; i < data.length; i++) {
             $('#deckformat').append("<option value='" + data[i].id + "'>" + data[i].name + "</option>");
         }
         that.onSetsLoaded();
@@ -107,13 +107,30 @@ DeckManager.prototype.getDeckList = debounce(function() {
             if (data.hasOwnProperty(prop)) {
                 if (data[prop][0] === undefined) continue;
                 line = "<div class='half pull-left'><h3>" + prop + "</h3>";
-                for (var i=0;i<data[prop].length;i++) {
+                for (var i = 0; i < data[prop].length; i++) {
                     line += "<a class='cardlink' data-cardset='" + JSON.stringify(data[prop][i].set) + "' data-cardnum='" + data[prop][i].num + "'>" +
-                    data[prop][i].count + " " + data[prop][i].name + "</a><br>";
+                        data[prop][i].count + " " + data[prop][i].name + "</a><br>";
                 }
                 line += "</div>";
             }
-            html += line;        }
+            html += line;
+        }
         $("#decklist").html(html);
     });
 }, 500);
+
+DeckManager.prototype.addCardToDeck = function(card) {
+    //See if this card should be added to the deck (number limits check)
+    var allowedCards = ["Plains", "Island", "Mountain", "Swamp", "Forest", "Relentless Rats", "Shadowborn Apostle"];
+    if (allowedCards.indexOf(card.cardData.name) === -1) {
+        //Return false if there's 4 already in the deck
+        var count = 0;
+        for (var i = 0; i < Builder.cards.length; i++) {
+            if (Builder.cards[i].cardData.name === card.cardData.name) count++;
+            if (count > 4) return false;
+        }
+    }
+    card.board = 1;
+    Builder.sorter.applySort();
+    return true;
+};
