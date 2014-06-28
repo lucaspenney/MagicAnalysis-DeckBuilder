@@ -9,9 +9,7 @@ function DeckList() {
 }
 
 DeckList.prototype.get = function() {
-	$('#decklist-modal').modal({
-		backdrop: false
-	});
+	$('#decklist-modal').modal();
 };
 
 DeckList.prototype.load = function() {
