@@ -30,8 +30,6 @@ DeckManager.prototype.loadDeck = function(id) {
             that.onSetsLoaded = function() {
                 $("#deckformat option").each(function() {
                     if ($(this).val() == data.format.id) $(this).prop('selected', true);
-                    console.log($(this).val());
-                    console.log(data.format.id);
                 });
             };
             that.onSetsLoaded();
@@ -50,7 +48,6 @@ $("#deckname").keyup(function(e) {
 $("#deckdescription").keyup(function(e) {
     Builder.deckManager.saveDeck();
 });
-
 
 DeckManager.prototype.saveDeck = debounce(function() {
     var deck = [];

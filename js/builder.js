@@ -45,7 +45,7 @@ DeckBuilder.prototype.render = function() {
 	}
 	this.updateFPS();
 	this.ctx.fillStyle = "#FFFFFF";
-	this.ctx.fillText("FPS: " + this.fps.toFixed(2), 1560,10);
+	this.ctx.fillText("FPS: " + this.fps.toFixed(2), 1560, 10);
 };
 
 DeckBuilder.prototype.updateFPS = function() {
@@ -53,11 +53,11 @@ DeckBuilder.prototype.updateFPS = function() {
 	var now = new Date;
 	var thisFrameFPS = 1000 / (now - this.lastFrame);
 	var fpsFilter = 30;
-	if (now!=this.lastFrame){
+	if (now != this.lastFrame) {
 		this.fps += (thisFrameFPS - this.fps) / fpsFilter;
 		this.lastFrame = now;
 	}
-	if (isNaN(this.fps)) this.fps = oldfps;
+	if (isNaN(this.fps) || this.fps === Infinity) this.fps = oldfps;
 };
 
 DeckBuilder.prototype.load = function() {

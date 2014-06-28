@@ -14,8 +14,8 @@ DeckList.prototype.get = function() {
 
 DeckList.prototype.load = function() {
 	//First remove everything from the board
+	Builder.cards = null;
 	Builder.cards = [];
-	Builder.sorter.applySort();
 
 	//Load the modified deck list as the deck
 	var list = $('#decklist-modal textarea').val();
@@ -26,7 +26,7 @@ DeckList.prototype.load = function() {
 
 	for (var i = 0; i < list.length; i++) {
 		if (list[i].length > 1) {
-			var amount = list[i].substr(0, list[i].indexOf(' '));
+			var amount = list[i].substr(0, list[i].indexOf('x '));
 			var card = list[i].substr(list[i].indexOf(' ') + 1); //Get everything after the space
 			if (isNaN(amount)) continue;
 			for (var k = 0; k < amount; k++) {
@@ -39,5 +39,5 @@ DeckList.prototype.load = function() {
 			}
 		}
 	}
-	$('#decklist-modal').modal('hide')
+	$('#decklist-modal').modal('hide');
 };
