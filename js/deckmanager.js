@@ -66,6 +66,7 @@ DeckManager.prototype.saveDeck = debounce(function() {
         published = false;
         $("#deckpublish").prop('checked', false);
     }
+
     var data = {
         id: this.deckId,
         name: $('#deckname').val(),
@@ -100,16 +101,13 @@ DeckManager.prototype.getDeckList = debounce(function() {
         var html = '';
         var line = '';
         data = data.grouped;
-        for (var prop in data) {
-            if (data.hasOwnProperty(prop)) {
-                if (data[prop][0] === undefined) continue;
-                line = "<div class='half pull-left'><h3>" + prop + "</h3>";
-                for (var i = 0; i < data[prop].length; i++) {
-                    line += "<a class='cardlink' data-cardset='" + JSON.stringify(data[prop][i].set) + "' data-cardnum='" + data[prop][i].num + "'>" +
-                        data[prop][i].count + " " + data[prop][i].name + "</a><br>";
-                }
-                line += "</div>";
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].name === undefined) continue;
+            line = "<div class='half pull-left'><h3>" + data[i].name + "</h3>";
+            for (var k = 0; k < data[i].cards.length; k++) {
+                line += "<a class='cardlink' data-cardset='" + JSON.stringify(data[i].cards[k].set) + "' data-cardnum='" + data[i].cards[k].num + "'>" + data[i].cards[k].count + " " + data[i].cards[k].name + "</a><br>";
             }
+            line += "</div>";
             html += line;
         }
         $("#decklist").html(html);
