@@ -14,8 +14,9 @@ DeckList.prototype.get = function() {
 
 DeckList.prototype.load = function() {
 	//First remove everything from the board
-	Builder.cards = null;
-	Builder.cards = [];
+	while (Builder.cards.length > 0) {
+		Builder.cards.pop();
+	}
 
 	//Load the modified deck list as the deck
 	var list = $('#decklist-modal textarea').val();
