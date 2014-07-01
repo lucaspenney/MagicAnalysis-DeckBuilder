@@ -17,6 +17,7 @@ function DeckBuilder() {
 	this.ctx = this.canvas.getContext('2d');
 	this.cards = [];
 	this.fps = 0;
+	this.showfps = false;
 	this.lastFrame = 0;
 }
 
@@ -44,8 +45,10 @@ DeckBuilder.prototype.render = function() {
 		this.cards[i].render();
 	}
 	this.updateFPS();
-	this.ctx.fillStyle = "#FFFFFF";
-	this.ctx.fillText("FPS: " + this.fps.toFixed(2), 1560, 10);
+	if (this.showfps) {
+		this.ctx.fillStyle = "#FFFFFF";
+		this.ctx.fillText("FPS: " + this.fps.toFixed(2), 1560, 10);
+	}
 };
 
 DeckBuilder.prototype.updateFPS = function() {
