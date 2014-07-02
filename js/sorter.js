@@ -41,7 +41,7 @@ Sorter.prototype.sortSideBoard = function() {
 	cards = stable(cards, lexCmp);
 	for (var i = 0; i < cards.length; i++) {
 		cards[i].targetx = 1450;
-		cards[i].targety = 50 + i * 75;
+		cards[i].targety = 80 + i * 75;
 		cards[i].z = i;
 		cards[i].targetCardScale = 0.5;
 	}

@@ -139,6 +139,8 @@ $('#deckbuilder canvas').mouseup(function(e) {
 			} else {
 				recreate = true;
 			}
+		} else if (Builder.selectedCard.board === 2) {
+			Builder.deckManager.addCardToDeck(Builder.selectedCard);
 		}
 	} else if (x >= 1300) {
 		if (Builder.selectedCard.board === 0) recreate = true;

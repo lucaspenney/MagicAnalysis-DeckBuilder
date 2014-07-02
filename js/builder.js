@@ -49,6 +49,9 @@ DeckBuilder.prototype.render = function() {
 		this.ctx.fillStyle = "#FFFFFF";
 		this.ctx.fillText("FPS: " + this.fps.toFixed(2), 1560, 10);
 	}
+	this.ctx.fillStyle = "#FFFFFF";
+	this.ctx.font = 'normal 18pt Lato';
+	this.ctx.fillText("Sideboard", 1472, 70);
 };
 
 DeckBuilder.prototype.updateFPS = function() {
