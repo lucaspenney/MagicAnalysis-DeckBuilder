@@ -30,7 +30,6 @@ SearchManager.prototype.searchRequest = debounce(function() {
 		type: $("#search .type").val(),
 		colors: colors
 	};
-	console.log(search);
 
 	function EncodeQueryData(data) {
 		var ret = [];
@@ -98,7 +97,7 @@ SearchManager.prototype.updateDisplay = function() {
 	var resultsSelection = '';
 	for (var i = 0; i < this.searchResults.length; i++) {
 		if (this.searchResults[i].id === this.selectedResult) resultsSelection += "<option selected value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + " (" + this.searchResults[i].set + ")" + "</option>";
-		else resultsSelection += "<option value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + " (" + this.searchResults[i].set + ")" + "</option>";
+		else resultsSelection += "<option value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + " (" + this.searchResults[i].set.toUpperCase() + ")" + "</option>";
 	}
 	if ($('#search select').text() != $(' < div / > ').html(resultsSelection).text()) {
 		$('#search select').html(resultsSelection);
