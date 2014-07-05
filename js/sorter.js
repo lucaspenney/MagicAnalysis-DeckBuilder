@@ -1,7 +1,15 @@
 function Sorter() {
-	this.sortType = 'cost';
+	this.sortType = 'Card Type';
 	this.values = 0;
 	this.cardScale = 0.65;
+	this.display = [];
+}
+
+Sorter.prototype.toggleSortType = function() {
+	if (this.sortType == 'Mana Cost') {
+		this.sortType = 'Card Type';
+	} else this.sortType = 'Mana Cost';
+	this.applySort();
 }
 
 Sorter.prototype.applySort = function() {
@@ -20,6 +28,17 @@ Sorter.prototype.calculateCardScale = function() {
 	}
 };
 
+Sorter.prototype.render = function() {
+	for (var i = 0; i < this.display.length; i++) {
+		var x = 330 + (i * (this.cardScale * 322));
+		x += (this.cardScale * 322) / 2;
+		Builder.ctx.font = 'normal 14pt Lato';
+		Builder.ctx.textAlign = 'center';
+		Builder.ctx.fillStyle = "#FFFFFF";
+		Builder.ctx.fillText(this.display[i], x, 16);
+	}
+};
+
 Sorter.prototype.sortMainBoard = function() {
 	var c = [];
 	for (var i = 0; i < Builder.cards.length; i++) {
@@ -27,8 +46,8 @@ Sorter.prototype.sortMainBoard = function() {
 			c.push(Builder.cards[i]);
 		}
 	}
-	if (this.sortType === 'cost') this.sortByConvertedCost(c);
-	else if (this.sortType === 'type') this.sortByCardType(c);
+	if (this.sortType === 'Mana Cost') this.sortByConvertedCost(c);
+	else if (this.sortType === 'Card Type') this.sortByCardType(c);
 };
 
 Sorter.prototype.sortSideBoard = function() {
@@ -48,6 +67,7 @@ Sorter.prototype.sortSideBoard = function() {
 };
 
 Sorter.prototype.sortByCardType = function(arr) {
+	var headings = ["Land", "Creature", "Sorcery", "Enchantment", "Instant", "Planeswalker", "Instant"];
 	var sorted = [];
 	for (var i = 0; i < 7; i++) {
 		sorted[i] = [];
@@ -62,20 +82,29 @@ Sorter.prototype.sortByCardType = function(arr) {
 		else if (arr[i].cardData.type.contains("artifact")) sorted[6].push(arr[i]);
 	}
 	this.cardScale = 0.54;
+	var pos = 0;
+	this.values = 0;
+	this.display = [];
 	for (var i = 0; i < sorted.length; i++) {
-		for (var k = 0; k < sorted[i].length; k++) {
-			var x = i * (this.cardScale * 322);
-			var y = k * 100;
-			sorted[i][k].moveTween = new Kinetic.Tween({
-				node: sorted[i][k],
-				x: 325 + x,
-				y: y,
-				easing: Kinetic.Easings.Linear,
-				duration: 0.5
-			});
-			sorted[i][k].moveTween.play();
-			sorted[i][k].setZIndex(k);
+		if (sorted[i].length > 0) {
+			this.values++;
+			this.display.push(headings[i]);
+			sorted[i] = stable(sorted[i], lexCmp);
 		}
+	}
+	this.calculateCardScale();
+	for (var i = 0; i < sorted.length; i++) {
+		if (sorted[i].length <= 0) continue;
+		for (var k = 0; k < sorted[i].length; k++) {
+			var x = 330 + (pos * (this.cardScale * 322)); //Multiplier to width of 322
+			var y = 22 + (k * 70);
+			if (sorted[i].length > 13) y = 22 + k * ((13 / sorted[i].length) * 70);
+			sorted[i][k].targetx = x;
+			sorted[i][k].targety = y;
+			sorted[i][k].z = k;
+			sorted[i][k].targetCardScale = this.cardScale;
+		}
+		pos++;
 	}
 };
 
@@ -88,7 +117,7 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 		if (arr[i] === undefined) continue;
 		if (arr[i].cardData === undefined) continue;
 		if (arr[i].cardData.converted_cost === undefined) continue;
-		if (arr[i].cardData.converted_cost === '') arr[i].cardData.converted_cost = 0; //Land
+		if (arr[i].cardData.mana_cost === '') arr[i].cardData.converted_cost = -1; //Land
 		arr[i].cardData.convertedCost = parseInt(arr[i].cardData.converted_cost);
 		allValues.push(arr[i].cardData.convertedCost);
 	}
@@ -103,7 +132,10 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 
 	//Create sorted 2d array
 	var sorted = [];
+	this.display = [];
 	for (var i = 0; i < values.length; i++) {
+		if (values[i] == -1) this.display.push("Land");
+		else this.display.push(values[i]);
 		sorted[i] = [];
 	}
 
@@ -117,8 +149,8 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 	for (var i = 0; i < sorted.length; i++) {
 		for (var k = 0; k < sorted[i].length; k++) {
 			var x = 330 + (i * (this.cardScale * 322)); //Multiplier to width of 322
-			var y = k * 70;
-			if (sorted[i].length > 13) y = k * ((13 / sorted[i].length) * 70);
+			var y = 22 + (k * 70);
+			if (sorted[i].length > 13) y = 22 + (k * ((13 / sorted[i].length) * 70));
 			sorted[i][k].targetx = x;
 			sorted[i][k].targety = y;
 			sorted[i][k].z = k;
