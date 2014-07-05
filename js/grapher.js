@@ -31,7 +31,9 @@ Grapher.prototype.calculate = function() {
 	if (this.loaded && google.visualization.DataTable !== undefined) {
 		var cards = [];
 		for (var i = 0; i < Builder.cards.length; i++) {
-			cards.push(Builder.cards[i].cardData);
+			if (Builder.cards[i].board === 1) {
+				cards.push(Builder.cards[i].cardData);
+			}
 		}
 		createCardTypeGraph("#graph1", cards);
 		createCardColorsGraph("#graph2", cards);
