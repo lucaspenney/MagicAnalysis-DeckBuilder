@@ -40,10 +40,11 @@ DeckBuilder.prototype.render = function() {
 			return 1;
 		return 0;
 	});
-
 	for (var i = 0; i < this.cards.length; i++) {
 		this.cards[i].render();
 	}
+
+	this.ctx.globalAlpha = 1;
 	this.updateFPS();
 	if (this.showfps) {
 		this.ctx.fillStyle = "#FFFFFF";

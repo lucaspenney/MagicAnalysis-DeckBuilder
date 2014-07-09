@@ -12,6 +12,12 @@ Sorter.prototype.toggleSortType = function() {
 	this.applySort();
 }
 
+Sorter.prototype.getNextSortType = function(type) {
+	if (type == 'Mana Cost') {
+		return 'Card Type';
+	} else return 'Mana Cost';
+}
+
 Sorter.prototype.applySort = function() {
 	this.sortMainBoard();
 	this.sortSideBoard();
