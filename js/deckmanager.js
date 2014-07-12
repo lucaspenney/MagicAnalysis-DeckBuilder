@@ -75,7 +75,7 @@ DeckManager.prototype.saveDeck = debounce(function() {
         format: $("#deckformat").val(),
         cards: deck
     };
-    $.post("/api/deck", data, function() {
+    $.post("/api/deck/save/" + this.deckId, data, function() {
         console.log("Saved deck");
         Builder.deckManager.getDeckList();
     });
