@@ -61,10 +61,16 @@ DeckManager.prototype.saveDeck = debounce(function() {
             sideboard: sideboard
         });
     }
-    var published = $("#deckpublish").prop('checked');
-    if (deck.length < 40 || !published) {
+
+    if (deck.length < 40) {
+        $('#deckpublish').hide();
+        $('#deckpublish input').prop('checked', false);
+    } else {
+        $('#deckpublish').show();
+    }
+    var published = $("#deckpublish input").prop('checked');
+    if (!published) {
         published = false;
-        $("#deckpublish").prop('checked', false);
     }
 
     var data = {
