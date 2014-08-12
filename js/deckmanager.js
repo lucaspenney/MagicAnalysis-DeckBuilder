@@ -22,8 +22,8 @@ DeckManager.prototype.loadDeck = function(id) {
         this.deckDescription = data.description;
         $('#deckname').val(this.deckName);
         $('#deckdescription').html(this.deckDescription);
-        if (data.published) {
-            $("#deckpublish").prop('checked', true);
+        if (!data.published) {
+            $("#deckprivate").prop('checked', true);
         }
         var that = this;
         if (data.format) {
@@ -63,21 +63,23 @@ DeckManager.prototype.saveDeck = debounce(function() {
     }
 
     if (deck.length < 40) {
-        $('#deckpublish').hide();
-        $('#deckpublish input').prop('checked', false);
+        $('#deckprivate').hide();
+        $('#deckprivate input').prop('checked', false);
     } else {
-        $('#deckpublish').show();
+        $('#deckprivate').show();
     }
-    var published = $("#deckpublish input").prop('checked');
-    if (!published) {
-        published = false;
+    var deckprivate = $("#deckprivate input").prop('checked');
+    if (!deckprivate) {
+        deckprivate = false;
+    } else {
+        deckprivate = true;
     }
 
     var data = {
         id: this.deckId,
         name: $('#deckname').val(),
         description: $("#deckdescription").val(),
-        publish: published,
+        deckprivate: deckprivate,
         format: $("#deckformat").val(),
         cards: deck
     };

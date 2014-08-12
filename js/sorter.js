@@ -73,7 +73,7 @@ Sorter.prototype.sortSideBoard = function() {
 };
 
 Sorter.prototype.sortByCardType = function(arr) {
-	var headings = ["Land", "Creature", "Sorcery", "Enchantment", "Instant", "Planeswalker", "Instant"];
+	var headings = ["Land", "Creature", "Sorcery", "Enchantment", "Instant", "Planeswalker", "Artifact"];
 	var sorted = [];
 	for (var i = 0; i < 7; i++) {
 		sorted[i] = [];
