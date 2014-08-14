@@ -84,10 +84,9 @@ DeckManager.prototype.saveDeck = debounce(function() {
         cards: deck
     };
     $.post("/api/deck/save/" + this.deckId, data, function() {
-        console.log("Saved deck");
         Builder.deckManager.getDeckList();
     });
-}, 250);
+}, 350);
 
 DeckManager.prototype.createCard = function(data, sideboard) {
     var cardData = data;
@@ -104,8 +103,9 @@ DeckManager.prototype.createCard = function(data, sideboard) {
 };
 
 DeckManager.prototype.getDeckList = debounce(function() {
+    var _this = this;
     $.get("/api/deck/list?id=" + Builder.deckManager.deckId, function(data) {
-        this.decklist = data.list;
+        _this.decklist = data.list;
         var html = '';
         var line = '';
         data = data.grouped;
@@ -120,13 +120,15 @@ DeckManager.prototype.getDeckList = debounce(function() {
             html += line;
         }
         $("#decklist").html(html);
+        $("#decklist-total").html(_this.decklist.total);
     });
 }, 500);
 
-DeckManager.prototype.addCardToDeck = function(card) {
+DeckManager.prototype.addCardToDeck = function(card, board) {
+    if (!board) board = 1;
     //See if this card should be added to the deck (number limits check)
     var allowedCards = ["Plains", "Island", "Mountain", "Swamp", "Forest", "Relentless Rats", "Shadowborn Apostle"];
-    if (allowedCards.indexOf(card.cardData.name) === -1) {
+    if (allowedCards.indexOf(card.cardData.name) === -1 && card.cardData.name.indexOf('Snow-Covered') === -1) {
         //Return false if there's 4 already in the deck
         var count = 0;
         for (var i = 0; i < Builder.cards.length; i++) {
@@ -134,7 +136,7 @@ DeckManager.prototype.addCardToDeck = function(card) {
             if (count > 4) return false;
         }
     }
-    card.board = 1;
+    card.board = board;
     Builder.sorter.applySort();
     return true;
 };

@@ -1,9 +1,17 @@
 $('body').keyup(function(e) {
+	if (e.keyCode === 16) {
+		Builder.searchManager.shifted = false;
+	}
 	if (e.keyCode === 13) {
 		Builder.searchManager.addResultToDeck();
 	} else if (e.keyCode === 38 || e.keyCode === 40) {
 		//Up down arrow presses (navigate through results
 		Builder.searchManager.navigateSearchResults(e.keyCode === 38);
+	}
+});
+$('body').keydown(function(e) {
+	if (e.keyCode === 16) {
+		Builder.searchManager.shifted = true;
 	}
 });
 $('#search input').keyup(function(e) {
@@ -58,6 +66,7 @@ function SearchManager() {
 	this.selectedResult = 0;
 	this.previewCard = null;
 	this.selectedIndex = null;
+	this.shifted = false;
 }
 
 SearchManager.prototype.load = function() {
@@ -96,7 +105,7 @@ SearchManager.prototype.updateDisplay = function() {
 
 	var resultsSelection = '';
 	for (var i = 0; i < this.searchResults.length; i++) {
-		if (this.searchResults[i].id === this.selectedResult) resultsSelection += "<option selected value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + " (" + this.searchResults[i].set + ")" + "</option>";
+		if (this.searchResults[i].id === this.selectedResult) resultsSelection += "<option selected value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + " (" + this.searchResults[i].set.toUpperCase() + ")" + "</option>";
 		else resultsSelection += "<option value=" + this.searchResults[i].id + ">" + this.searchResults[i].name + " (" + this.searchResults[i].set.toUpperCase() + ")" + "</option>";
 	}
 	if ($('#search select').text() != $(' < div / > ').html(resultsSelection).text()) {
@@ -120,7 +129,11 @@ SearchManager.prototype.updateDisplay = function() {
 };
 
 SearchManager.prototype.addResultToDeck = debounce(function() {
-	Builder.deckManager.addCardToDeck(this.previewCard);
+	if (this.shifted) {
+		Builder.deckManager.addCardToDeck(this.previewCard, 2);
+	} else {
+		Builder.deckManager.addCardToDeck(this.previewCard, 1);
+	}
 	this.updateDisplay();
 }, 50);
 
