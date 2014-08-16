@@ -13,32 +13,16 @@ DeckList.prototype.get = function() {
 };
 
 DeckList.prototype.load = function() {
-	//First remove everything from the board
-	while (Builder.cards.length > 0) {
-		Builder.cards.pop();
-	}
-
 	//Load the modified deck list as the deck
 	var list = $('#decklist-modal textarea').val();
-	list = list.split("\n");
-
-	//Set the deckManager's deck size to the length of the list
-	Builder.deckManager.deckSize = list.length;
-
-	for (var i = 0; i < list.length; i++) {
-		if (list[i].length > 1) {
-			var amount = list[i].substr(0, list[i].indexOf('x '));
-			var card = list[i].substr(list[i].indexOf(' ') + 1); //Get everything after the space
-			if (isNaN(amount)) continue;
-			for (var k = 0; k < amount; k++) {
-				$.get("/api/cardSearch?name=" + card, function(data) {
-					if (data.length > 0) {
-						var cardData = data[0];
-						Builder.deckManager.createCard(cardData, 0);
-					}
-				});
-			}
+	$.post("/api/deck/import", {
+			deck: Builder.deckManager.deckId,
+			list: list
+		},
+		function(data) {
+			$('#decklist-modal').modal('hide');
+			Builder.deckManager.loadDeck(Builder.deckManager.deckId); //Reload the deck
+			Builder.deckManager.saveDeck();
 		}
-	}
-	$('#decklist-modal').modal('hide');
+	);
 };

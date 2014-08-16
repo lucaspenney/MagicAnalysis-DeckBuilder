@@ -16,7 +16,14 @@ function DeckManager() {
 
 DeckManager.prototype.loadDeck = function(id) {
     this.deckId = id;
+    this.loadedCards = 0;
+    this.deckSize = 0;
+    this.loaded = false;
     var _this = this;
+
+    while (Builder.cards.length > 0) {
+        Builder.cards.pop();
+    }
     $.get("/api/deck?id=" + id, function(data) {
         this.deckName = data.name;
         this.deckDescription = data.description;
