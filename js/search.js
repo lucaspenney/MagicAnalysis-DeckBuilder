@@ -2,6 +2,9 @@ $('body').keyup(function(e) {
 	if (e.keyCode === 16) {
 		Builder.searchManager.shifted = false;
 	}
+	if (e.keyCode === 17) {
+		Builder.searchManager.controlled = false;
+	}
 	if (e.keyCode === 13) {
 		Builder.searchManager.addResultToDeck();
 	}
@@ -9,6 +12,9 @@ $('body').keyup(function(e) {
 $('body').keydown(function(e) {
 	if (e.keyCode === 16) {
 		Builder.searchManager.shifted = true;
+	}
+	if (e.keyCode === 17) {
+		Builder.searchManager.controlled = true;
 	}
 	if (e.keyCode === 38 || e.keyCode === 40) {
 		//Up down arrow presses (navigate through results
@@ -69,6 +75,7 @@ function SearchManager() {
 	this.previewCard = null;
 	this.selectedIndex = null;
 	this.shifted = false;
+	this.controlled = false;
 }
 
 SearchManager.prototype.load = function() {
@@ -131,10 +138,15 @@ SearchManager.prototype.updateDisplay = function() {
 };
 
 SearchManager.prototype.addResultToDeck = debounce(function() {
-	if (this.shifted) {
-		Builder.deckManager.addCardToDeck(this.previewCard, 2);
+	var zone = 1;
+	if (this.shifted) zone = 2;
+	if (this.controlled) {
+		for (var i = 0; i < 4; i++) {
+			Builder.deckManager.addCardToDeck(this.previewCard, zone);
+			this.updateDisplay();
+		}
 	} else {
-		Builder.deckManager.addCardToDeck(this.previewCard, 1);
+		Builder.deckManager.addCardToDeck(this.previewCard, zone);
 	}
 	this.updateDisplay();
 }, 50);
