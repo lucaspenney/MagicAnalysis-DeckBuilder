@@ -30,7 +30,8 @@ DeckManager.prototype.loadDeck = function(id) {
         $('#deckname').val(this.deckName);
         $('#deckdescription').html(this.deckDescription);
         if (!data.published) {
-            $("#deckprivate").prop('checked', true);
+            $("#deckprivate input").prop('checked', true);
+            console.log('true');
         }
         var that = this;
         if (data.format) {
@@ -41,6 +42,7 @@ DeckManager.prototype.loadDeck = function(id) {
             };
             that.onSetsLoaded();
         }
+        console.log(data);
         for (var i = 0; i < data.cards.length; i++) {
             _this.deckSize = data.cards.length;
             _this.createCard(data.cards[i].card, data.cards[i].sideboard);
