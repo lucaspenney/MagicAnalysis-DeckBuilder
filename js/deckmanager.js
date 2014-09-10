@@ -31,7 +31,6 @@ DeckManager.prototype.loadDeck = function(id) {
         $('#deckdescription').html(this.deckDescription);
         if (!data.published) {
             $("#deckprivate input").prop('checked', true);
-            console.log('true');
         }
         var that = this;
         if (data.format) {
