@@ -68,6 +68,9 @@ $('#search select').change(function(e) {
 	Builder.searchManager.selectedResult = $(this).val();
 	Builder.searchManager.updateDisplay();
 });
+$('#search select').dblclick(function(e) {
+	Builder.searchManager.addResultToDeck();
+});
 
 function SearchManager() {
 	this.searchResults = [];
