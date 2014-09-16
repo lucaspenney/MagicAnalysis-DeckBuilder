@@ -18,8 +18,11 @@ $('body').keydown(function(e) {
 	}
 	if (e.keyCode === 38 || e.keyCode === 40) {
 		//Up down arrow presses (navigate through results
-		Builder.searchManager.navigateSearchResults(e.keyCode === 38);
-		e.preventDefault();
+		if (!$(document.activeElement).is($(document.body))) {
+			Builder.searchManager.navigateSearchResults(e.keyCode === 38);
+			e.preventDefault();
+		}
+
 	}
 });
 $('#search input').keyup(function(e) {
