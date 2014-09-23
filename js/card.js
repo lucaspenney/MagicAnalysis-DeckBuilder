@@ -15,7 +15,7 @@ function Card(data, board, onload) {
 	this.loaded = false;
 	var _this = this;
 	this.img = new Image();
-	this.img.src = "http://manastack.com/cards/images/" + this.cardData.set + "/" + this.cardData.num + ".jpg";
+	this.img.src = "http://mtgimage.com/set/" + this.cardData.set + "/" + this.cardData.image + ".jpg";
 	this.img.onload = function() {
 		if (onload !== undefined) onload();
 		_this.loaded = true;
@@ -73,7 +73,7 @@ Card.prototype.loadImage = function() {
 	var _this = this;
 	this.loaded = false;
 	this.img = new Image();
-	this.img.src = "http://manastack.com/cards/images/" + this.cardData.set + "/" + this.cardData.num + ".jpg";
+	this.img.src = "http://mtgimage.com/set/" + this.cardData.set + "/" + this.cardData.image + ".jpg";
 	this.img.onload = function() {
 		_this.loaded = true;
 	};
