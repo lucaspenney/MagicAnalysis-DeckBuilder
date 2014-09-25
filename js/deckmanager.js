@@ -53,7 +53,16 @@ DeckManager.prototype.loadDeck = function(id) {
 $("#deckname").keyup(function(e) {
     Builder.deckManager.saveDeck();
 });
+
 $("#deckdescription").keyup(function(e) {
+    Builder.deckManager.saveDeck();
+});
+
+$("#deckdescription").keyup(function(e) {
+    Builder.deckManager.saveDeck();
+});
+
+$("#deckformat").change(function(e) {
     Builder.deckManager.saveDeck();
 });
 
@@ -144,7 +153,8 @@ DeckManager.prototype.addCardToDeck = function(card, board) {
             if (count > 4) return false;
         }
     }
-    card.board = board;
+    card.setBoard(board);
+    Builder.deckManager.saveDeck();
     Builder.sorter.applySort();
     return true;
 };

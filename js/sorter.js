@@ -22,7 +22,6 @@ Sorter.prototype.applySort = function() {
 	this.sortMainBoard();
 	this.sortSideBoard();
 	Builder.grapher.calculate();
-	Builder.deckManager.saveDeck();
 };
 
 Sorter.prototype.calculateCardScale = function() {

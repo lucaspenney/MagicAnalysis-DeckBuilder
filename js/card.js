@@ -79,6 +79,13 @@ Card.prototype.loadImage = function() {
 	};
 }
 
+Card.prototype.setBoard = function(board) {
+	if (this.board !== board) {
+		this.board = board;
+		Builder.deckManager.saveDeck();
+	}
+}
+
 $('#deckbuilder canvas').mousemove(function(e) {
 	if (!Builder) return;
 	//Subtracting raw offsets based on the canvas's position on the page.
@@ -140,11 +147,11 @@ $('#deckbuilder canvas').mouseup(function(e) {
 				recreate = true;
 			}
 		} else if (Builder.selectedCard.board === 2) {
-			Builder.selectedCard.board = 1;
+			Builder.selectedCard.setBoard(1);
 		}
 	} else if (x >= 1300) {
 		if (Builder.selectedCard.board === 0) recreate = true;
-		Builder.selectedCard.board = 2;
+		Builder.selectedCard.setBoard(2);
 	} else if (x <= 250) {
 		if (Builder.selectedCard.board === 0) {
 			Builder.selectedCard.targetx = 0;
