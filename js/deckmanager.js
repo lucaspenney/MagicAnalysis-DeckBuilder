@@ -131,7 +131,7 @@ DeckManager.prototype.getDeckList = debounce(function() {
             if (data[i].cards.length < 1) continue;
             line = "<div class='half pull-left'><h3>" + data[i].name + " (" + data[i].total + ")</h3>";
             for (var k = 0; k < data[i].cards.length; k++) {
-                line += "<a class='cardlink' data-cardset='" + JSON.stringify(data[i].cards[k].set) + "' data-cardnum='" + data[i].cards[k].num + "'>" + data[i].cards[k].count + " " + data[i].cards[k].name + "</a><br>";
+                line += "<a class='cardlink' data-cardset='" + JSON.stringify(data[i].cards[k].set) + "' data-cardimage='" + data[i].cards[k].image + "'>" + data[i].cards[k].count + " " + data[i].cards[k].name + "</a><br>";
             }
             line += "</div>";
             html += line;
