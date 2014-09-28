@@ -126,6 +126,7 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 		if (arr[i].cardData.converted_cost === undefined) continue;
 		if (arr[i].cardData.mana_cost === '') arr[i].cardData.converted_cost = -1; //Land
 		arr[i].cardData.convertedCost = parseInt(arr[i].cardData.converted_cost);
+		if (isNaN(arr[i].cardData.convertedCost)) arr[i].cardData.convertedCost = -1;
 		allValues.push(arr[i].cardData.convertedCost);
 	}
 	values = allValues.filter(function(elem, pos) {
@@ -148,6 +149,8 @@ Sorter.prototype.sortByConvertedCost = function(arr) {
 
 	for (var i = 0; i < arr.length; i++) {
 		var index = values.indexOf(arr[i].cardData.convertedCost);
+		console.log(arr[i].cardData.convertedCost);
+		console.log(index);
 		sorted[index].push(arr[i]);
 		//Sort the array by name, so cards don't get mixed in their column
 		sorted[index] = stable(sorted[index], lexCmp);

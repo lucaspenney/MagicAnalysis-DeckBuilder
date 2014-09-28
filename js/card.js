@@ -63,6 +63,7 @@ Card.prototype.destroy = function() {
 			if (Builder.cards[i] === _this) {
 				Builder.cards.splice(i, 1);
 				Builder.sorter.applySort();
+				Builder.deckManager.saveDeck();
 				break;
 			}
 		}
