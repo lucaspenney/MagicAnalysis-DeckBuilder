@@ -16,13 +16,13 @@ DeckList.prototype.load = function() {
 	//Load the modified deck list as the deck
 	var list = $('#decklist-modal textarea').val();
 	$.post("/api/deck/import", {
-			deck: Builder.deckManager.deckId,
-			list: list
-		},
-		function(data) {
-			$('#decklist-modal').modal('hide');
-			Builder.deckManager.loadDeck(Builder.deckManager.deckId); //Reload the deck
-			Builder.deckManager.saveDeck();
-		}
-	);
+		deck: Builder.deckManager.deckId,
+		list: list
+	}).done(function(data) {
+		$('#decklist-modal').modal('hide');
+		Builder.deckManager.loadDeck(Builder.deckManager.deckId); //Reload the deck
+		Builder.deckManager.saveDeck();
+	}).fail(function(data) {
+		$('#import-errors').html(data.responseText.replace(/"/g, ""));
+	});
 };
